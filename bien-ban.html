@@ -255,64 +255,69 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <!-- ===== TAB 3: ẢNH ===== -->
 <div id="p-anh" class="panel">
 
-  <!-- Built-in GPS camera -->
   <div class="card">
-    <div class="card-head">📷 Chụp ảnh có tọa độ (tích hợp sẵn)</div>
+    <div class="card-head">📷 Chụp ảnh có tọa độ & thông tin vi phạm</div>
     <div class="card-body">
-      <div id="gps-status" style="font-size:12px;color:#888;margin-bottom:10px;
-        padding:8px;background:#f8f8f8;border-radius:6px;border:1px solid #eee;">
-        📍 Chưa lấy tọa độ GPS
+
+      <!-- Live info preview from form -->
+      <div id="stamp-preview" style="background:#f0f7ff;border:1px solid #3498db33;
+        border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.7;">
+        <div style="font-weight:700;color:#1a5276;margin-bottom:4px;">📌 Thông tin sẽ in lên ảnh:</div>
+        <div id="sp-time" style="color:#555;">⏰ Ngày giờ: tự động khi chụp</div>
+        <div id="sp-gps"  style="color:#555;">📍 Tọa độ: tự lấy khi chụp</div>
+        <div id="sp-loc"  style="color:#555;">📍 Vị trí: <span id="sp-loc-val">—</span></div>
+        <div id="sp-hv"   style="color:#c0392b;">⚠️ Hành vi: <span id="sp-hv-val">—</span></div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:10px;">
-        <button onclick="getStampGPS()" style="flex:1;background:#1a5276;color:#fff;border:none;
-          border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;">
-          📍 Lấy tọa độ GPS trước
-        </button>
-        <label style="flex:1;background:#c0392b;color:#fff;border:none;
-          border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;
-          display:flex;align-items:center;justify-content:center;gap:6px;">
-          📷 Chụp ảnh
-          <input type="file" accept="image/*" capture="environment"
-                 id="stamp-cam" style="display:none" onchange="stampPhoto(this)"/>
-        </label>
-      </div>
+
+      <!-- Single capture button -->
+      <label id="cam-label" style="display:flex;align-items:center;justify-content:center;
+        gap:10px;background:#c0392b;color:#fff;border-radius:10px;padding:14px;
+        font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;">
+        📷 Chụp ảnh (tự lấy GPS + đóng dấu)
+        <input type="file" accept="image/*" capture="environment"
+               id="stamp-cam" style="display:none" onchange="stampPhoto(this)"/>
+      </label>
+
       <label style="display:flex;align-items:center;justify-content:center;gap:8px;
         border:1px dashed #ccc;border-radius:8px;padding:10px;cursor:pointer;
-        font-size:12.5px;color:#666;background:#f9f9f9;">
+        font-size:12.5px;color:#666;background:#f9f9f9;margin-bottom:6px;">
         🖼 Chọn ảnh từ máy (cũng sẽ đóng dấu)
-        <input type="file" accept="image/*" multiple style="display:none" onchange="stampPhoto(this)"/>
+        <input type="file" accept="image/*" multiple style="display:none"
+               onchange="stampPhoto(this)"/>
       </label>
-      <!-- Preview canvas (hidden, used for processing) -->
+
+      <label style="display:flex;align-items:center;justify-content:center;gap:8px;
+        border:1px dashed #aaa;border-radius:8px;padding:10px;cursor:pointer;
+        font-size:12.5px;color:#888;background:#fafafa;">
+        📎 Đính kèm ảnh Timemark (không đóng dấu lại)
+        <input type="file" accept="image/*" multiple style="display:none"
+               onchange="addPh(this)"/>
+      </label>
+
       <canvas id="stamp-canvas" style="display:none;"></canvas>
     </div>
   </div>
 
-  <!-- Timemark fallback -->
+  <!-- Link Timemark -->
   <div class="card">
-    <div class="card-head" style="background:#2c3e50;">📲 Hoặc dùng app Timemark</div>
+    <div class="card-head" style="background:#2c3e50;">📲 Dùng Timemark (nếu đã cài)</div>
     <div class="card-body">
       <a class="tm-btn" href="https://apps.apple.com/app/id6446071834" target="_blank">
         <span class="ico">📷</span>
         <div>
           <div>Mở Timemark trên iPhone</div>
-          <div style="font-size:11px;font-weight:400;opacity:.8;">Chụp xong đính kèm ảnh xuống dưới</div>
+          <div style="font-size:11px;font-weight:400;opacity:.8;">Chụp xong đính kèm ảnh lên trên</div>
         </div>
       </a>
-      <label style="display:flex;align-items:center;justify-content:center;gap:8px;
-        border:1px dashed #ccc;border-radius:8px;padding:10px;cursor:pointer;
-        font-size:12.5px;color:#666;background:#f9f9f9;margin-top:8px;">
-        📎 Đính kèm ảnh Timemark đã chụp
-        <input type="file" accept="image/*" multiple style="display:none" onchange="addPh(this)"/>
-      </label>
     </div>
   </div>
 
-  <!-- Photo gallery -->
+  <!-- Gallery -->
   <div class="card">
-    <div class="card-head">🖼 Ảnh đã đính kèm vào biên bản</div>
+    <div class="card-head">🖼 Ảnh đã đính kèm (<span id="ph-count-num">0</span> ảnh)</div>
     <div class="card-body">
       <div class="photo-grid" id="pgrid"></div>
-      <div id="ph-count" style="margin-top:6px;font-size:12px;color:#888;">Chưa có ảnh</div>
+      <div id="ph-count" style="margin-top:6px;font-size:12px;color:#888;"></div>
     </div>
   </div>
   <div class="gap"></div>
@@ -433,34 +438,22 @@ function undoSk(){if(skHist.length)skCtx.putImageData(skHist.pop(),0,0);}
 function clearSk(){if(confirm('Xóa sơ họa?')){skCtx.fillStyle='#fff';skCtx.fillRect(0,0,sk.width,sk.height);}}
 
 // ===== GPS STAMP CAMERA =====
-let stampGPS = null; // {lat, lng, addr, time}
+let stampGPS = null;
 
-function getStampGPS(){
-  const el = g('gps-status');
-  el.textContent = '⏳ Đang lấy tọa độ GPS...';
-  el.style.color = '#888';
-  if(!navigator.geolocation){
-    el.textContent = '❌ Thiết bị không hỗ trợ GPS';
-    el.style.color = '#c0392b'; return;
-  }
-  navigator.geolocation.getCurrentPosition(async pos=>{
-    const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    const now = new Date();
-    stampGPS = { lat, lng, acc: Math.round(pos.coords.accuracy), time: now };
-    el.style.color = '#1a7431';
-    el.textContent = `✅ ${lat.toFixed(6)}, ${lng.toFixed(6)} (±${Math.round(pos.coords.accuracy)}m) — ${fmtDateTime(now)}`;
-    // Try reverse geocode (free API)
-    try{
-      const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
-      const d = await r.json();
-      stampGPS.addr = d.display_name ? d.display_name.split(',').slice(0,3).join(', ') : '';
-      el.textContent = `✅ ${lat.toFixed(6)}, ${lng.toFixed(6)} — ${stampGPS.addr||''} — ${fmtDateTime(now)}`;
-    } catch(e){ /* no address, fine */ }
-  }, err=>{
-    el.style.color = '#c0392b';
-    el.textContent = `❌ Lỗi GPS: ${err.code===1?'Chưa cấp quyền vị trí':err.message}`;
-  }, {enableHighAccuracy:true, timeout:15000, maximumAge:30000});
+function updateStampPreview(){
+  const kCoc = v('tu_km'), bo = v('bo'), ct = v('ct'), hv1 = v('hv1');
+  const locEl = document.getElementById('sp-loc-val');
+  const hvEl  = document.getElementById('sp-hv-val');
+  if(locEl) locEl.textContent =
+    [kCoc&&`K cọc ${kCoc}`, bo&&`Bờ ${bo}`, ct&&`Tuyến ${ct}`].filter(Boolean).join('  |  ') || '(chưa điền)';
+  if(hvEl)  hvEl.textContent  = hv1 ? hv1.slice(0,80)+(hv1.length>80?'...':'') : '(chưa điền)';
 }
+
+// Auto-update preview when user types in form fields
+['tu_km','bo','ct','hv1'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', updateStampPreview);
+});
 
 function fmtDateTime(d){
   const days=['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
@@ -471,91 +464,113 @@ function fmtDateTime(d){
 function stampPhoto(inp){
   const files = Array.from(inp.files);
   if(!files.length) return;
-  // Use GPS captured before, or current time without GPS
-  const gpsInfo = stampGPS || { lat:null, lng:null, addr:'', time:new Date() };
-  files.forEach(file=>{
-    const reader = new FileReader();
-    reader.onload = e=>{
-      const img = new Image();
-      img.onload = ()=>{
-        const canvas = g('stamp-canvas');
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        const ctx = canvas.getContext('2d');
-        // Draw original photo
-        ctx.drawImage(img, 0, 0);
-        drawWatermark(ctx, img.naturalWidth, img.naturalHeight, gpsInfo, file.name);
-        const stamped = canvas.toDataURL('image/jpeg', 0.92);
-        photos.push({ id: Date.now()+'s'+Math.random().toString(36).slice(2), src: stamped, nm: 'stamped_'+file.name });
-        renderPhotos();
+  const now = new Date();
+
+  // Update time preview
+  const timeEl = document.getElementById('sp-time');
+  if(timeEl) timeEl.textContent = '⏰ ' + fmtDateTime(now);
+
+  // Get GPS then process photos
+  const processPhotos = (gpsInfo)=>{
+    files.forEach(file=>{
+      const reader = new FileReader();
+      reader.onload = e=>{
+        const img = new Image();
+        img.onload = ()=>{
+          const canvas = document.getElementById('stamp-canvas');
+          canvas.width  = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img,0,0);
+          drawWatermark(ctx, img.naturalWidth, img.naturalHeight, gpsInfo);
+          const stamped = canvas.toDataURL('image/jpeg', 0.92);
+          photos.push({id:Date.now()+'s'+Math.random().toString(36).slice(2), src:stamped, nm:'stamped_'+file.name});
+          renderPhotos();
+        };
+        img.src = e.target.result;
       };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Try GPS (3s timeout so camera doesn't feel slow)
+  const gpsEl = document.getElementById('sp-gps');
+  if(navigator.geolocation){
+    if(gpsEl) gpsEl.textContent = '📍 Đang lấy tọa độ...';
+    let done=false;
+    const timer = setTimeout(()=>{ if(!done){done=true; processPhotos({time:now});} }, 3000);
+    navigator.geolocation.getCurrentPosition(pos=>{
+      if(done) return; done=true; clearTimeout(timer);
+      const lat=pos.coords.latitude, lng=pos.coords.longitude;
+      stampGPS = {lat,lng,acc:Math.round(pos.coords.accuracy),time:now};
+      if(gpsEl) gpsEl.textContent = `📍 ${lat.toFixed(6)}, ${lng.toFixed(6)} (±${Math.round(pos.coords.accuracy)}m)`;
+      processPhotos(stampGPS);
+    }, ()=>{
+      if(done) return; done=true; clearTimeout(timer);
+      if(gpsEl) gpsEl.textContent = '📍 Không lấy được GPS — ảnh vẫn được đóng dấu thông tin khác';
+      processPhotos({time:now});
+    }, {enableHighAccuracy:true, timeout:3000, maximumAge:60000});
+  } else {
+    processPhotos({time:now});
+  }
   inp.value='';
 }
 
-function drawWatermark(ctx, W, H, gps, filename){
-  const scale = Math.max(W, H) / 1200; // scale font to image size
-  const fSize = Math.round(28 * scale);
-  const pad = Math.round(16 * scale);
-  const lineH = Math.round(fSize * 1.45);
+function drawWatermark(ctx, W, H, gps){
+  const scale = Math.max(W,H)/1200;
+  const fSize = Math.round(28*scale);
+  const pad   = Math.round(16*scale);
+  const lineH = Math.round(fSize*1.45);
+  const now   = gps.time || new Date();
 
-  // Build watermark lines
-  const now = gps.time || new Date();
-  const kCoc = v('tu_km') || '';
-  const bo   = v('bo')    || '';
-  const ct   = v('ct')    || '';
-  const hv1  = v('hv1')   || '';
+  const kCoc = v('tu_km'), bo = v('bo'), ct = v('ct'), hv1 = v('hv1');
+
   const lines = [
     fmtDateTime(now),
-    gps.lat ? `${gps.lat.toFixed(6)}, ${gps.lng.toFixed(6)}${gps.acc?' (±'+gps.acc+'m)':''}` : 'GPS: Chưa lấy tọa độ',
-    [kCoc && `K cọc ${kCoc}`, bo && `Bờ ${bo}`, ct && `Tuyến ${ct}`].filter(Boolean).join('  |  ') || (gps.addr||''),
-    hv1 ? hv1.slice(0,120)+(hv1.length>120?'...':'') : 'Hành vi vi phạm: (chưa điền)'
+    gps.lat ? `${gps.lat.toFixed(6)}, ${gps.lng.toFixed(6)}${gps.acc?' (±'+gps.acc+'m)':''}` : 'GPS: không lấy được',
+    [kCoc&&`K cọc ${kCoc}`, bo&&`Bờ ${bo}`, ct&&`Tuyến ${ct}`].filter(Boolean).join('  |  ') || '(chưa điền vị trí)',
+    hv1 ? hv1.slice(0,100)+(hv1.length>100?'...':'') : 'Hành vi vi phạm: (chưa điền)'
   ];
 
-  const boxH = lines.length * lineH + pad * 2;
+  const boxH = lines.length*lineH + pad*2;
   const boxY = H - boxH;
 
-  // Semi-transparent dark background
-  ctx.fillStyle = 'rgba(0,0,0,0.62)';
-  ctx.fillRect(0, boxY, W, boxH);
+  // Dark background
+  ctx.fillStyle='rgba(0,0,0,0.65)';
+  ctx.fillRect(0,boxY,W,boxH);
+  // Red accent bar
+  ctx.fillStyle='#e74c3c';
+  ctx.fillRect(0,boxY,Math.round(6*scale),boxH);
 
-  // Vertical accent bar (like Timemark)
-  ctx.fillStyle = '#e74c3c';
-  ctx.fillRect(0, boxY, Math.round(6*scale), boxH);
+  ctx.textBaseline='top';
+  const lx = pad + Math.round(12*scale);
 
-  // Text
-  ctx.font = `bold ${fSize}px 'Arial', sans-serif`;
-  ctx.fillStyle = '#ffffff';
-  ctx.textBaseline = 'top';
-  lines.forEach((line, i)=>{
-    const y = boxY + pad + i * lineH;
-    if(i === 0){
-      // First line: time is big
-      ctx.font = `bold ${Math.round(fSize*1.25)}px Arial`;
-      ctx.fillText(line, pad + Math.round(12*scale), y);
-    } else if(i === lines.length-1){
-      // Last line: org name smaller
-      ctx.font = `${Math.round(fSize*0.85)}px Arial`;
-      ctx.fillStyle = '#aad4f5';
-      ctx.fillText(line, pad + Math.round(12*scale), y + lineH*0.1);
-      ctx.fillStyle = '#ffffff';
+  lines.forEach((line,i)=>{
+    const y = boxY + pad + i*lineH;
+    if(i===0){
+      ctx.font=`bold ${Math.round(fSize*1.2)}px Arial`;
+      ctx.fillStyle='#ffffff';
+    } else if(i===1){
+      ctx.font=`${fSize}px Arial`;
+      ctx.fillStyle='#7fd4ec';
+    } else if(i===2){
+      ctx.font=`${fSize}px Arial`;
+      ctx.fillStyle='#f0e68c';
     } else {
-      ctx.font = `${fSize}px Arial`;
-      ctx.fillText(line, pad + Math.round(12*scale), y);
+      ctx.font=`${Math.round(fSize*0.9)}px Arial`;
+      ctx.fillStyle='#ffaaaa';
     }
+    ctx.fillText(line, lx, y);
   });
 
-  // Verification badge top-right
-  ctx.font = `bold ${Math.round(fSize*0.8)}px Arial`;
-  ctx.fillStyle = 'rgba(0,0,0,0.5)';
-  const badge = '  ✓ Thủy lợi Nhật Tựu  ';
-  const bW = ctx.measureText(badge).width + pad;
-  ctx.fillRect(W - bW - pad, 0, bW + pad, lineH * 1.5);
-  ctx.fillStyle = '#2ecc71';
-  ctx.fillText(badge, W - bW, lineH * 0.25);
+  // Top-right badge
+  ctx.font=`bold ${Math.round(fSize*0.75)}px Arial`;
+  const badge='  Thủy lợi Nhật Tựu ✓  ';
+  const bw=ctx.measureText(badge).width+pad;
+  ctx.fillStyle='rgba(0,0,0,0.55)';
+  ctx.fillRect(W-bw-pad,0,bw+pad,lineH*1.4);
+  ctx.fillStyle='#2ecc71';
+  ctx.fillText(badge,W-bw,Math.round(lineH*0.2));
 }
 
 // ===== COLLECT =====
@@ -813,11 +828,46 @@ ${d.khp?`<p style="margin-top:6px;">- Yêu cầu khắc phục trước ngày ${
 
 </body></html>`;
 
-  const w=window.open('','_blank','width=900,height=700');
-  w.document.write(html);
-  w.document.close();
-  w.focus();
-  setTimeout(()=>w.print(),800);
+  // Dùng hidden iframe thay vì window.open — hoạt động trên iPhone Safari
+  let frame = document.getElementById('print-frame');
+  if(frame) frame.remove();
+  frame = document.createElement('iframe');
+  frame.id = 'print-frame';
+  frame.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:9999;background:#fff;';
+  document.body.appendChild(frame);
+
+  frame.onload = ()=>{
+    // Nút đóng để thoát preview
+    const closeBtn = frame.contentDocument.createElement('div');
+    closeBtn.innerHTML = `
+      <div style="position:fixed;top:0;left:0;right:0;background:#1a5276;color:#fff;
+        padding:12px 16px;display:flex;align-items:center;gap:10px;z-index:99999;
+        font-family:sans-serif;">
+        <button onclick="window.parent.document.getElementById('print-frame').remove()"
+          style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);
+          color:#fff;padding:8px 14px;border-radius:6px;font-size:14px;cursor:pointer;">
+          ✕ Đóng
+        </button>
+        <span style="flex:1;font-size:14px;font-weight:700;">Biên bản vi phạm — ${d.vp_ten||''}</span>
+        <button onclick="window.print()"
+          style="background:#e74c3c;border:none;color:#fff;padding:8px 16px;
+          border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;">
+          🖨 In / Lưu PDF
+        </button>
+      </div>
+      <div style="height:52px;"></div>`;
+    frame.contentDocument.body.insertBefore(closeBtn, frame.contentDocument.body.firstChild);
+    // Hướng dẫn lưu PDF trên iPhone
+    if(/iPhone|iPad/i.test(navigator.userAgent)){
+      const hint = frame.contentDocument.createElement('div');
+      hint.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a5276;color:#fff;padding:10px 14px;font-size:12px;font-family:sans-serif;z-index:99999;';
+      hint.innerHTML = '📱 iPhone: Bấm <b>🖨 In / Lưu PDF</b> → Chọn <b>"Save to Files"</b> để lưu PDF về máy';
+      frame.contentDocument.body.appendChild(hint);
+    }
+  };
+
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  frame.src = URL.createObjectURL(blob);
 }
 </script>
 </body>
