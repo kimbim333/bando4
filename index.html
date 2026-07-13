@@ -185,6 +185,134 @@
   }
   .measure-clear:hover{color:var(--text-1);border-color:var(--text-2);}
 
+  .timemark-btn{
+    display:flex; align-items:center; gap:10px;
+    background:linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border:1px solid #3fb6a855;
+    color:var(--text-0); font-size:13px; font-weight:600;
+    padding:12px 14px; border-radius:8px; cursor:pointer;
+    text-decoration:none; width:100%;
+    transition:border-color .15s, background .15s;
+  }
+  .timemark-btn:hover{ border-color:var(--accent); background:linear-gradient(135deg, #1e2840 0%, #1a2d4a 100%); }
+  .timemark-btn .ic{ font-size:20px; }
+
+  /* ---------- draw tools ---------- */
+  .draw-actions{ display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+  .draw-export-btn{
+    width:100%; padding:9px; border-radius:6px; cursor:pointer;
+    background:var(--accent-soft); border:1px solid #3fb6a855;
+    color:var(--accent); font-weight:600; font-size:12.5px;
+  }
+  .draw-export-btn:hover{ background:#3fb6a833; }
+  .drawn-item{
+    display:flex; align-items:center; gap:7px;
+    padding:6px 4px; border-bottom:1px dashed var(--line);
+    font-size:12px; color:var(--text-1);
+  }
+  .drawn-item .di-swatch{ width:10px; height:10px; border-radius:2px; flex:none; }
+  .drawn-item .di-name{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .drawn-item .di-del{
+    background:transparent; border:none; color:var(--text-2);
+    cursor:pointer; font-size:13px; padding:0 2px; flex:none;
+  }
+  .drawn-item .di-del:hover{ color:#e8636b; }
+
+  /* Feature info form (modal overlay on map) */
+  #draw-form-overlay{
+    display:none; position:absolute; bottom:24px; left:50%; transform:translateX(-50%);
+    width:min(420px, calc(100vw - 32px));
+    background:var(--bg-1); border:1px solid var(--line);
+    border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.55);
+    z-index:1200; padding:20px 22px; font-size:13px;
+  }
+  #draw-form-overlay.open{ display:block; }
+  #draw-form-overlay h3{ margin:0 0 14px; font-size:15px; color:var(--text-0); }
+  .dff-row{ margin-bottom:10px; }
+  .dff-row label{ display:block; font-size:11px; color:var(--text-2); margin-bottom:4px; }
+  .dff-row input[type="text"], .dff-row select, .dff-row textarea{
+    width:100%; background:var(--bg-2); border:1px solid var(--line);
+    color:var(--text-0); padding:8px 10px; border-radius:6px;
+    font-size:12.5px; font-family:var(--sans); outline:none;
+  }
+  .dff-row input[type="text"]:focus, .dff-row select:focus, .dff-row textarea:focus{
+    border-color:var(--accent);
+  }
+  .dff-row textarea{ height:60px; resize:vertical; }
+  .dff-color-row{ display:flex; align-items:center; gap:10px; }
+  .dff-color-row input[type="color"]{
+    width:36px; height:36px; border:1px solid var(--line); border-radius:5px;
+    background:transparent; cursor:pointer; padding:2px;
+  }
+  .dff-color-presets{ display:flex; gap:6px; flex-wrap:wrap; }
+  .dff-preset{
+    width:22px; height:22px; border-radius:4px; cursor:pointer;
+    border:2px solid transparent; transition:border-color .12s;
+  }
+  .dff-preset:hover, .dff-preset.selected{ border-color:#fff; }
+  .dff-btns{ display:flex; gap:8px; margin-top:14px; }
+  .dff-btn-save{
+    flex:1; padding:9px; border-radius:6px; cursor:pointer;
+    background:var(--accent-soft); border:1px solid var(--accent);
+    color:var(--accent); font-weight:600; font-size:12.5px;
+  }
+  .dff-btn-save:hover{ background:#3fb6a833; }
+  .dff-btn-cancel{
+    padding:9px 16px; border-radius:6px; cursor:pointer;
+    background:var(--bg-2); border:1px solid var(--line);
+    color:var(--text-1); font-size:12.5px;
+  }
+  .dff-btn-cancel:hover{ border-color:var(--text-2); }
+
+  /* ---------- draw popup & github dialog ---------- */
+  #draw-popup, #github-dialog{
+    position:fixed; inset:0; background:rgba(0,0,0,.55);
+    z-index:2000; display:flex; align-items:center; justify-content:center;
+  }
+  #draw-popup-inner, #github-dialog-inner{
+    background:var(--bg-1); border:1px solid var(--line);
+    border-radius:12px; padding:24px; width:320px; max-width:92vw;
+    box-shadow:0 10px 40px rgba(0,0,0,.5);
+  }
+  #draw-popup-inner h3, #github-dialog-inner h3{
+    margin:0 0 16px; font-size:16px; color:var(--text-0);
+  }
+  .draw-field{ margin-bottom:12px; }
+  .draw-field label{ display:block; font-size:11px; color:var(--text-2); margin-bottom:4px; }
+  .draw-field input, .draw-field select, .draw-field textarea{
+    width:100%; background:var(--bg-2); border:1px solid var(--line);
+    color:var(--text-0); padding:8px 10px; border-radius:6px;
+    font-size:13px; font-family:var(--sans); outline:none; box-sizing:border-box;
+  }
+  .draw-field input[type="color"]{ height:36px; padding:2px 4px; cursor:pointer; }
+  .draw-field input:focus, .draw-field select:focus, .draw-field textarea:focus{ border-color:var(--accent); }
+  .draw-field textarea{ resize:vertical; min-height:56px; }
+  .draw-popup-btns{ display:flex; gap:8px; margin-top:16px; justify-content:flex-end; }
+  .draw-popup-btns button{
+    padding:8px 18px; border-radius:6px; font-size:13px; cursor:pointer;
+    border:1px solid var(--line); background:var(--bg-2); color:var(--text-1);
+  }
+  .draw-popup-btns button.primary{
+    background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;
+  }
+  .draw-popup-btns button:hover{ opacity:.85; }
+  .draw-hint{ font-size:11.5px; color:var(--text-2); margin:0 0 14px; line-height:1.5; }
+
+  /* draw list items in sidebar */
+  .draw-item{
+    display:flex; align-items:center; gap:6px;
+    padding:5px 4px; border-radius:4px; font-size:12px; color:var(--text-1);
+  }
+  .draw-item:hover{ background:var(--bg-2); }
+  .draw-item .di-swatch{ width:8px; height:8px; border-radius:50%; flex:none; }
+  .draw-item .di-name{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .draw-item .di-del{
+    background:none; border:none; color:var(--text-2); cursor:pointer;
+    font-size:12px; padding:0 2px; opacity:0; transition:opacity .15s;
+  }
+  .draw-item:hover .di-del{ opacity:1; }
+  .draw-item .di-del:hover{ color:#e8636b; }
+
   /* ---------- large floating info panel (over the map) ---------- */
   #info-panel-overlay{
     position:absolute; left:24px; right:24px; bottom:24px;
@@ -196,8 +324,17 @@
     overflow:hidden;
     display:none;
     flex-direction:column;
+    transition:max-height .3s ease;
   }
   #info-panel-overlay.open{ display:flex; }
+  /* Drag handle shown on mobile to expand/collapse the panel */
+  .info-panel-handle{
+    display:none; justify-content:center; align-items:center;
+    padding:8px 0 4px; cursor:pointer; flex:none;
+  }
+  .info-panel-handle-bar{
+    width:36px; height:4px; border-radius:2px; background:var(--line);
+  }
   .info-panel-close{
     position:absolute; top:14px; right:14px; z-index:5;
     width:32px; height:32px; border-radius:50%;
@@ -207,7 +344,7 @@
   }
   .info-panel-close:hover{ color:var(--text-0); border-color:var(--accent); }
   #info-panel{
-    overflow-y:auto; padding:26px 28px 28px;
+    overflow-y:auto; padding:26px 28px 28px; flex:1;
   }
   #info-panel .empty{color:var(--text-2);font-size:14px;line-height:1.6;}
 
@@ -235,6 +372,56 @@
     background:var(--accent-soft);border:1px solid #3fb6a833;
     font-size:13px;color:var(--text-1);line-height:1.65;
   }
+
+  .draw-export-btn{
+    width:100%;background:var(--accent-soft);border:1px solid #3fb6a855;
+    color:var(--accent);font-weight:600;padding:9px;border-radius:6px;
+    cursor:pointer;font-size:12.5px;
+  }
+  .draw-export-btn:hover{background:#3fb6a833;}
+  .drawn-item{
+    display:flex;align-items:center;gap:6px;
+    padding:5px 4px;border-radius:4px;font-size:12px;color:var(--text-1);
+    border-bottom:1px dashed var(--line);
+  }
+  .drawn-item:last-child{border-bottom:none;}
+  .drawn-item .di-swatch{width:9px;height:9px;border-radius:2px;flex:none;}
+  .drawn-item .di-swatch.dot{border-radius:50%;}
+  .drawn-item .di-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-0);}
+  .drawn-item .di-del{
+    background:transparent;border:none;color:var(--text-2);
+    cursor:pointer;font-size:13px;padding:0 3px;
+  }
+  .drawn-item .di-del:hover{color:#e8636b;}
+
+  /* ---------- draw info dialog ---------- */
+  #draw-dialog-overlay{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+    z-index:2000;align-items:center;justify-content:center;
+  }
+  #draw-dialog-overlay.open{display:flex;}
+  #draw-dialog{
+    background:var(--bg-1);border:1px solid var(--line);border-radius:12px;
+    padding:24px;width:min(420px,92vw);max-height:90vh;overflow-y:auto;
+    box-shadow:0 12px 40px rgba(0,0,0,.6);
+  }
+  #draw-dialog h3{margin:0 0 18px;font-size:16px;color:var(--text-0);}
+  .dd-field{margin-bottom:14px;}
+  .dd-field label{display:block;font-size:11.5px;color:var(--text-2);margin-bottom:5px;}
+  .dd-field input,.dd-field textarea,.dd-field select{
+    width:100%;background:var(--bg-2);border:1px solid var(--line);
+    color:var(--text-0);padding:8px 10px;border-radius:6px;
+    font-size:13px;font-family:var(--sans);outline:none;
+  }
+  .dd-field input:focus,.dd-field textarea:focus,.dd-field select:focus{border-color:var(--accent);}
+  .dd-field textarea{height:70px;resize:vertical;}
+  .dd-color-row{display:flex;align-items:center;gap:10px;}
+  .dd-color-row input[type=color]{width:40px;height:34px;padding:2px;border-radius:4px;cursor:pointer;border:1px solid var(--line);}
+  .dd-color-row input[type=range]{flex:1;}
+  .dd-btns{display:flex;gap:10px;margin-top:20px;}
+  .dd-btn-ok{flex:1;background:var(--accent);border:none;color:#fff;font-weight:700;padding:10px;border-radius:7px;cursor:pointer;font-size:13.5px;}
+  .dd-btn-ok:hover{opacity:.9;}
+  .dd-btn-cancel{flex:none;background:var(--bg-2);border:1px solid var(--line);color:var(--text-1);padding:10px 18px;border-radius:7px;cursor:pointer;font-size:13px;}
 
   /* ---------- map ---------- */
   #map{flex:1;background:#0a0f13;}
@@ -303,13 +490,22 @@
     .locate-btn{ width:40px; height:40px; }
 
     #info-panel-overlay{
-      left:10px; right:10px; bottom:10px;
-      max-width:none; max-height:72vh;
-      border-radius:12px;
+      left:0; right:0; bottom:0;
+      max-width:none; max-height:38vh;
+      border-radius:14px 14px 0 0;
+      border-bottom:none;
     }
-    #info-panel{ padding:22px 18px 22px; }
-    .info-card h2{ font-size:19px; }
-    .info-row .v.big{ font-size:21px; }
+    #info-panel-overlay.expanded{
+      max-height:75vh;
+    }
+    .info-panel-handle{ display:flex; }
+    #info-panel{ padding:4px 16px 16px; }
+    .info-card h2{ font-size:16px; margin-bottom:10px; }
+    .info-row{ padding:7px 0; font-size:13px; }
+    .info-row .v{ font-size:13px; }
+    .info-row .v.big{ font-size:18px; }
+    .info-row .v.person{ font-size:14px; }
+    .info-panel-close{ top:10px; right:10px; width:28px; height:28px; font-size:13px; }
   }
 </style>
 </head>
@@ -379,20 +575,211 @@
       <button class="measure-clear" id="btn-measure-clear" style="display:none;">Xóa kết quả đo</button>
     </div>
 
+    <div class="section">
+      <div class="section-title">📷 Chụp ảnh hiện trường</div>
+      <a id="btn-timemark" href="https://apps.apple.com/app/id6446071834" target="_blank" class="timemark-btn">
+        <span class="ic">📷</span>Mở Timemark chụp ảnh
+      </a>
+      <div class="status-line" style="margin-top:6px;">
+        Bấm để mở app <b style="color:var(--text-1)">Timemark</b> chụp ảnh hiện trường có tọa độ GPS + timestamp. Ảnh xuất từ Timemark dạng <b style="color:var(--text-1)">KMZ</b> có thể nạp thẳng vào bản đồ này.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">3 · Vẽ &amp; Xuất KML</div>
+      <div class="measure-row">
+        <button class="measure-btn" id="btn-draw-line">
+          <span class="ic">〜</span>Vẽ đường
+        </button>
+        <button class="measure-btn" id="btn-draw-point">
+          <span class="ic">⊕</span>Vẽ điểm
+        </button>
+      </div>
+      <div class="status-line" id="draw-status">Chọn công cụ vẽ, click trên bản đồ. Double-click để kết thúc đường, Esc để hủy.</div>
+      <div id="draw-list" style="margin-top:8px;max-height:160px;overflow-y:auto;"></div>
+      <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+        <button class="draw-export-btn" id="btn-export-kml" style="display:none;">⬇ Xuất file KML về máy</button>
+        <button class="draw-export-btn" id="btn-save-github" style="display:none;background:#3fb6a822;border-color:#3fb6a855;color:var(--accent);">☁ Lưu thẳng lên GitHub</button>
+        <button class="measure-clear" id="btn-draw-clear" style="display:none;">Xóa tất cả đối tượng đã vẽ</button>
+      </div>
+    </div>
+
     <div class="section" style="border-bottom:none;flex:1;">
       <div class="status-line">Bấm vào một tuyến kênh hoặc một điểm công trình trên bản đồ — thông tin chi tiết sẽ hiện trong khung lớn phía dưới bản đồ.</div>
     </div>
 
     <footer class="help">
-      Phiên bản thử nghiệm chạy hoàn toàn trên trình duyệt — dữ liệu nạp vào sẽ <b>mất khi tải lại trang</b>. Mỗi phiên làm việc, hãy nạp lại file KML/KMZ và Excel gốc của đơn vị. Định vị GPS (nút ◎ trên bản đồ) cần <b>mở file qua máy chủ HTTPS</b> (vd: lưu trên Google Drive/SharePoint rồi mở link, hoặc host nội bộ) — mở trực tiếp file trên máy (file://) thường bị trình duyệt từ chối quyền định vị.
+      Phiên bản thử nghiệm chạy hoàn toàn trên trình duyệt — dữ liệu nạp vào sẽ <b>mất khi tải lại trang</b>. Mỗi phiên làm việc, hãy nạp lại file KML/KMZ và Excel gốc của đơn vị. Định vị GPS (nút ◎ trên bản đồ) cần <b>mở file qua máy chủ HTTPS</b>.
     </footer>
+  </div>
+
+  <!-- Draw info popup -->
+  <div id="draw-popup" style="display:none;">
+    <div id="draw-popup-inner">
+      <h3 id="draw-popup-title">Thêm thông tin</h3>
+      <div class="draw-field">
+        <label>Tên *</label>
+        <input type="text" id="draw-name" placeholder="Ví dụ: Cống Hòa Bình B" />
+      </div>
+      <div class="draw-field">
+        <label>Loại</label>
+        <select id="draw-type">
+          <option value="Kênh">Kênh</option>
+          <option value="Cống">Cống</option>
+          <option value="Trạm bơm">Trạm bơm</option>
+          <option value="Mốc chỉ giới">Mốc chỉ giới</option>
+          <option value="Khác">Khác</option>
+        </select>
+      </div>
+      <div class="draw-field">
+        <label>Mô tả</label>
+        <textarea id="draw-desc" rows="2" placeholder="Ghi chú thêm..."></textarea>
+      </div>
+      <div class="draw-field">
+        <label>Màu</label>
+        <input type="color" id="draw-color" value="#e85d75" />
+      </div>
+      <div class="draw-popup-btns">
+        <button id="draw-popup-cancel">Hủy</button>
+        <button id="draw-popup-save" class="primary">Lưu đối tượng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GitHub save dialog -->
+  <div id="github-dialog" style="display:none;">
+    <div id="github-dialog-inner">
+      <h3>Lưu lên GitHub</h3>
+      <p class="draw-hint">Cần GitHub Personal Access Token để ghi file. Token chỉ dùng 1 lần cho phiên này, không lưu lại.</p>
+      <div class="draw-field">
+        <label>GitHub Token</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" />
+      </div>
+      <div class="draw-field">
+        <label>Repository (user/repo)</label>
+        <input type="text" id="gh-repo" placeholder="kimbim333/bando2" />
+      </div>
+      <div class="draw-field">
+        <label>Tên file trên GitHub</label>
+        <input type="text" id="gh-filename" value="du-lieu.kml" />
+      </div>
+      <div class="draw-popup-btns">
+        <button id="gh-cancel">Hủy</button>
+        <button id="gh-confirm" class="primary">Lưu lên GitHub</button>
+      </div>
+      <div id="gh-status" class="status-line" style="margin-top:8px;"></div>
+    </div>
   </div>
 
   <div id="map"></div>
 
+  <!-- Feature info form: appears after user finishes drawing a line/point -->
+  <div id="draw-form-overlay">
+    <h3 id="dff-title">Thông tin đối tượng vừa vẽ</h3>
+    <div class="dff-row">
+      <label>Tên *</label>
+      <input type="text" id="dff-name" placeholder="Ví dụ: Kênh Bình Minh, Cống K3+200…" />
+    </div>
+    <div class="dff-row">
+      <label>Loại công trình</label>
+      <select id="dff-type">
+        <option value="">-- Chọn loại --</option>
+        <optgroup label="Kênh / Tuyến">
+          <option value="Kênh chính">Kênh chính</option>
+          <option value="Kênh nhánh">Kênh nhánh</option>
+          <option value="Kênh cấp 1">Kênh cấp 1</option>
+          <option value="Kênh cấp 2">Kênh cấp 2</option>
+          <option value="Kênh cấp 3">Kênh cấp 3</option>
+        </optgroup>
+        <optgroup label="Công trình điểm">
+          <option value="Cống điều tiết">Cống điều tiết</option>
+          <option value="Trạm bơm">Trạm bơm</option>
+          <option value="Mốc chỉ giới">Mốc chỉ giới</option>
+          <option value="Cống đầu mối">Cống đầu mối</option>
+          <option value="Hồ chứa">Hồ chứa</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="dff-row">
+      <label>Nhóm / Folder (để phân loại trong cây lớp hiển thị)</label>
+      <input type="text" id="dff-folder" placeholder="Ví dụ: Kênh chính, Công trình khu A…" />
+    </div>
+    <div class="dff-row">
+      <label>Màu hiển thị</label>
+      <div class="dff-color-row">
+        <input type="color" id="dff-color" value="#4fb6e8" />
+        <div class="dff-color-presets" id="dff-color-presets">
+          <div class="dff-preset" style="background:#4fb6e8" data-color="#4fb6e8" title="Xanh dương"></div>
+          <div class="dff-preset" style="background:#e0a23a" data-color="#e0a23a" title="Vàng cam"></div>
+          <div class="dff-preset" style="background:#3fb6a8" data-color="#3fb6a8" title="Xanh lá"></div>
+          <div class="dff-preset" style="background:#e85d75" data-color="#e85d75" title="Đỏ hồng"></div>
+          <div class="dff-preset" style="background:#c4a3e8" data-color="#c4a3e8" title="Tím"></div>
+          <div class="dff-preset" style="background:#ffffff" data-color="#ffffff" title="Trắng"></div>
+          <div class="dff-preset" style="background:#ffff00" data-color="#ffff00" title="Vàng"></div>
+          <div class="dff-preset" style="background:#ff6600" data-color="#ff6600" title="Cam"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dff-row">
+      <label>Mô tả / Ghi chú</label>
+      <textarea id="dff-desc" placeholder="Mô tả chi tiết, thông số kỹ thuật, ghi chú…"></textarea>
+    </div>
+    <div class="dff-btns">
+      <button class="dff-btn-save" id="dff-save">✓ Lưu đối tượng</button>
+      <button class="dff-btn-cancel" id="dff-cancel">Hủy bỏ</button>
+    </div>
+  </div>
+
   <div id="info-panel-overlay">
+    <div class="info-panel-handle" id="info-panel-handle">
+      <div class="info-panel-handle-bar"></div>
+    </div>
     <button class="info-panel-close" id="info-panel-close" title="Đóng">✕</button>
     <div id="info-panel"></div>
+  </div>
+
+  <!-- Dialog nhập thông tin khi vẽ xong 1 đối tượng -->
+  <div id="draw-dialog-overlay">
+    <div id="draw-dialog">
+      <h3 id="draw-dialog-title">Thông tin đối tượng vừa vẽ</h3>
+      <div class="dd-field">
+        <label>Tên *</label>
+        <input type="text" id="dd-name" placeholder="Ví dụ: Kênh Hòa Bình, Cống A1..." />
+      </div>
+      <div class="dd-field">
+        <label>Nhóm / Folder (để phân loại trong KML)</label>
+        <input type="text" id="dd-folder" placeholder="Ví dụ: Kênh chính, Công trình..." />
+      </div>
+      <div class="dd-field">
+        <label>Loại công trình</label>
+        <select id="dd-kind">
+          <option value="Kênh">Kênh / Tuyến</option>
+          <option value="Cống">Cống</option>
+          <option value="Trạm bơm">Trạm bơm</option>
+          <option value="Mốc chỉ giới">Mốc chỉ giới</option>
+          <option value="Khác">Khác</option>
+        </select>
+      </div>
+      <div class="dd-field">
+        <label>Màu hiển thị</label>
+        <div class="dd-color-row">
+          <input type="color" id="dd-color" value="#1e90ff" />
+          <span id="dd-color-label" style="font-size:12px;color:var(--text-2);">#1e90ff</span>
+        </div>
+      </div>
+      <div class="dd-field" id="dd-width-field">
+        <label>Độ dày nét vẽ: <span id="dd-width-label">3</span>px</label>
+        <input type="range" id="dd-width" min="1" max="8" value="3" />
+      </div>
+      <div class="dd-field">
+        <label>Mô tả / Ghi chú</label>
+        <textarea id="dd-desc" placeholder="Chiều dài, năm xây dựng, ghi chú kỹ thuật..."></textarea>
+      </div>
+      <div class="dd-btns">
+        <button class="dd-btn-cancel" id="dd-cancel">Hủy (không lưu)</button>
+        <button class="dd-btn-ok" id="dd-ok">✓ Lưu đối tượng</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -437,14 +824,20 @@
   /* ===================== INFO PANEL OVERLAY (large floating card) ===================== */
   const infoPanelOverlay = document.getElementById('info-panel-overlay');
   const infoPanelCloseBtn = document.getElementById('info-panel-close');
+  const infoPanelHandle = document.getElementById('info-panel-handle');
 
   function openInfoOverlay(){
     infoPanelOverlay.classList.add('open');
+    infoPanelOverlay.classList.remove('expanded'); // always start collapsed on mobile
   }
   function closeInfoOverlay(){
-    infoPanelOverlay.classList.remove('open');
+    infoPanelOverlay.classList.remove('open','expanded');
   }
   infoPanelCloseBtn.addEventListener('click', closeInfoOverlay);
+  // Tap the handle bar to toggle between collapsed (38vh) and expanded (75vh)
+  infoPanelHandle.addEventListener('click', ()=>{
+    infoPanelOverlay.classList.toggle('expanded');
+  });
 
   /* ===================== MAP SETUP ===================== */
   const map = L.map('map', { zoomControl: true, attributionControl: true }).setView([21.0285, 105.8542], 13);
@@ -827,10 +1220,17 @@
     const lineStyle = styleEl.getElementsByTagName('LineStyle')[0];
     const iconStyle = styleEl.getElementsByTagName('IconStyle')[0];
     const polyStyle = styleEl.getElementsByTagName('PolyStyle')[0];
+    let iconHref = '', iconScale = 1;
+    if(iconStyle){
+      const iconEl = iconStyle.getElementsByTagName('Icon')[0];
+      iconHref = iconEl ? getTagText(iconEl,'href') : '';
+      iconScale = parseFloat(getTagText(iconStyle,'scale')||'1') || 1;
+    }
     return {
       lineColor: lineStyle ? kmlColorToCss(getTagText(lineStyle,'color')) : null,
       lineWidth: lineStyle ? parseFloat(getTagText(lineStyle,'width')||'') || null : null,
       iconColor: iconStyle ? kmlColorToCss(getTagText(iconStyle,'color')) : null,
+      iconHref, iconScale,
       polyColor: polyStyle ? kmlColorToCss(getTagText(polyStyle,'color')) : null,
     };
   }
@@ -867,12 +1267,103 @@
     return null;
   }
 
+  // Map Google Earth KML <IconStyle><Icon><href> URL patterns → local SVG shape names
+  function getIconShapeFromHref(href){
+    if(!href) return 'circle';
+    const h = href.toLowerCase();
+    if(h.includes('pushpin'))                  return 'pushpin';
+    if(h.includes('paddle'))                   return 'paddle';
+    if(h.includes('/water'))                   return 'water';
+    if(h.includes('triangle'))                 return 'triangle';
+    if(h.includes('diamond'))                  return 'diamond';
+    if(h.includes('star'))                     return 'star';
+    if(h.includes('square'))                   return 'square';
+    if(h.includes('cross')||h.includes('/plus')) return 'cross';
+    if(h.includes('flag'))                     return 'flag';
+    if(h.includes('info'))                     return 'info';
+    if(h.includes('donut')||h.includes('ring')) return 'ring';
+    if(h.includes('target')||h.includes('bull')) return 'target';
+    if(h.includes('arrow'))                    return 'arrow';
+    return 'circle';
+  }
+
+  // Fallback when KML Placemark has no style: guess shape+color from name
   function inferPointStyle(name){
     const n = stripDiacritics(name);
-    if(n.includes('tram')) return { color: '#e0a23a', label: 'Trạm bơm' };
-    if(n.includes('cong')) return { color: '#4fb6e8', label: 'Cống' };
-    if(n.includes('moc')) return { color: '#c4a3e8', label: 'Mốc chỉ giới' };
-    return { color: '#9fb0bc', label: 'Điểm công trình' };
+    if(n.includes('tram')) return { color:'#e0a23a', label:'Trạm bơm',      iconShape:'paddle'  };
+    if(n.includes('cong')) return { color:'#4fb6e8', label:'Cống',           iconShape:'diamond' };
+    if(n.includes('moc'))  return { color:'#c4a3e8', label:'Mốc chỉ giới',   iconShape:'pushpin' };
+    if(n.includes('ho'))   return { color:'#3fb6a8', label:'Hồ chứa',        iconShape:'water'   };
+    return                        { color:'#9fb0bc', label:'Điểm công trình', iconShape:'circle'  };
+  }
+
+  // Build a Leaflet DivIcon from shape name + CSS color + KML scale.
+  // shape  : one of 14 names matched from KML href or inferred from Placemark name.
+  // color  : CSS hex string (#rrggbb), already converted from KML's aabbggrr.
+  // scale  : float from KML <IconStyle><scale>, default 1.0.
+  function makeSvgIcon(shape, color, scale){
+    const c = color||'#9fb0bc';
+    const sz = Math.round(24 * Math.max(0.6, Math.min(2.0, parseFloat(scale)||1)));
+    let svgHtml, anchor;
+
+    switch(shape){
+      case 'pushpin':
+        anchor=[Math.round(sz*0.3),sz];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><ellipse cx="10" cy="8" rx="8" ry="8" fill="${c}" stroke="#fff" stroke-width="1.5"/><line x1="10" y1="16" x2="10" y2="24" stroke="${c}" stroke-width="3" stroke-linecap="round"/><circle cx="10" cy="8" r="3" fill="#fff" fill-opacity="0.45"/></svg>`;
+        break;
+      case 'paddle':
+        anchor=[sz/2,sz];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><circle cx="12" cy="9" r="8" fill="${c}" stroke="#fff" stroke-width="1.5"/><line x1="12" y1="17" x2="12" y2="24" stroke="${c}" stroke-width="3" stroke-linecap="round"/><circle cx="12" cy="9" r="3.5" fill="#fff" fill-opacity="0.35"/></svg>`;
+        break;
+      case 'water':
+        anchor=[sz/2,sz];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><path d="M12 2C12 2 4 11 4 16A8 8 0 0 0 20 16C20 11 12 2 12 2Z" fill="${c}" stroke="#fff" stroke-width="1.5"/><ellipse cx="9" cy="14" rx="2" ry="3" fill="#fff" fill-opacity="0.35"/></svg>`;
+        break;
+      case 'triangle':
+        anchor=[sz/2,sz];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><polygon points="12,2 22,22 2,22" fill="${c}" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+        break;
+      case 'diamond':
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><polygon points="12,2 22,12 12,22 2,12" fill="${c}" stroke="#fff" stroke-width="1.5"/></svg>`;
+        break;
+      case 'star':
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" fill="${c}" stroke="#fff" stroke-width="1"/></svg>`;
+        break;
+      case 'square':
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" fill="${c}" stroke="#fff" stroke-width="1.5"/></svg>`;
+        break;
+      case 'cross':
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><path d="M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8z" fill="${c}" stroke="#fff" stroke-width="1"/></svg>`;
+        break;
+      case 'flag':
+        anchor=[2,sz];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><line x1="3" y1="2" x2="3" y2="22" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/><path d="M3 3L20 8L3 14Z" fill="${c}" stroke="#fff" stroke-width="1"/></svg>`;
+        break;
+      case 'info':
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="${c}" stroke="#fff" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff" font-family="sans-serif">i</text></svg>`;
+        break;
+      case 'ring':
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="${c}" stroke-width="4"/><circle cx="12" cy="12" r="4" fill="${c}"/></svg>`;
+        break;
+      case 'target':
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="${c}" stroke-width="2"/><circle cx="12" cy="12" r="6" fill="none" stroke="${c}" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="${c}"/></svg>`;
+        break;
+      case 'arrow':
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><polygon points="12,2 22,22 12,17 2,22" fill="${c}" stroke="#fff" stroke-width="1.5"/></svg>`;
+        break;
+      default: // circle
+        anchor=[sz/2,sz/2];
+        svgHtml=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="${c}" stroke="#fff" stroke-width="2"/><circle cx="9" cy="9" r="3" fill="#fff" fill-opacity="0.3"/></svg>`;
+    }
+    return L.divIcon({ html:svgHtml, className:'', iconSize:[sz,sz], iconAnchor:anchor, popupAnchor:[0,-Math.round(sz/2)] });
   }
 
   function getDirectChildTagText(el, tag){
@@ -946,6 +1437,7 @@
 
         const lineNode = pm.getElementsByTagName('LineString')[0];
         const pointNode = pm.getElementsByTagName('Point')[0];
+        const polygonNode = pm.getElementsByTagName('Polygon')[0];
 
         if(lineNode){
           const coordEl = lineNode.getElementsByTagName('coordinates')[0];
@@ -971,20 +1463,53 @@
           poly.on('mouseout', ()=> { if(feature.visible) poly.setStyle({ weight:lineWeight, color:lineColor }); });
           poly.on('click', (e)=> handleCanalClick(feature, e.latlng));
 
+        } else if(polygonNode){
+          // Polygon (hồ chứa, vùng bảo vệ, mặt bằng công trình...)
+          const outerEl = polygonNode.getElementsByTagName('outerBoundaryIs')[0] || polygonNode;
+          const coordEl = outerEl.getElementsByTagName('coordinates')[0];
+          if(!coordEl) return;
+          const latlngs = parseCoordString(coordEl.textContent);
+          if(latlngs.length < 3) return;
+
+          const fillColor = (kmlStyle && kmlStyle.polyColor) ? kmlStyle.polyColor.css :
+                            (kmlStyle && kmlStyle.lineColor) ? kmlStyle.lineColor.css : '#3fb6a8';
+          const lineColor = (kmlStyle && kmlStyle.lineColor) ? kmlStyle.lineColor.css : fillColor;
+          const alpha = (kmlStyle && kmlStyle.polyColor) ? (kmlStyle.polyColor.alpha||0.4) : 0.35;
+
+          const polygon = L.polygon(latlngs.map(p=>[p.lat,p.lng]), {
+            color: lineColor, weight: 2, fillColor, fillOpacity: alpha, opacity: 0.9
+          }).addTo(canalLayerGroup);
+
+          const center = polygon.getBounds().getCenter();
+          const feature = { id: 'polygon-'+featureIdx, name, type:'canal', layer: polygon,
+            latlngs, totalLength: 0, ext, baseColor: fillColor, baseWeight: 2, visible:true, treeNodeId: node.id };
+          node.featureRef = feature;
+          allFeatures.push(feature);
+          canalCount++;
+          newBounds.push(polygon.getBounds());
+
+          polygon.on('click', (e)=> handleCanalClick(feature, e.latlng));
+
         } else if(pointNode){
           const coordEl = pointNode.getElementsByTagName('coordinates')[0];
           if(!coordEl) return;
           const pts = parseCoordString(coordEl.textContent);
           if(pts.length === 0) return;
           const p = pts[0];
-          const inferred = inferPointStyle(name);
-          const pointColor = (kmlStyle && kmlStyle.iconColor) ? kmlStyle.iconColor.css : inferred.color;
 
-          const marker = L.circleMarker([p.lat,p.lng], {
-            radius: 7, color:'#fff', weight:1.5, fillColor: pointColor, fillOpacity:0.95
+          // Resolve icon: KML style takes priority over name-based inference
+          const inferred = inferPointStyle(name);
+          const iconHref  = (kmlStyle && kmlStyle.iconHref)  ? kmlStyle.iconHref  : '';
+          const iconScale = (kmlStyle && kmlStyle.iconScale) ? kmlStyle.iconScale : 1;
+          const pointColor = (kmlStyle && kmlStyle.iconColor) ? kmlStyle.iconColor.css : inferred.color;
+          // Use href shape if KML provides one, otherwise fall back to name-inferred shape
+          const iconShape = iconHref ? getIconShapeFromHref(iconHref) : inferred.iconShape;
+
+          const marker = L.marker([p.lat,p.lng], {
+            icon: makeSvgIcon(iconShape, pointColor, iconScale)
           }).addTo(pointLayerGroup);
 
-          const feature = { id: 'point-'+featureIdx, name, type:'point', layer: marker, latlng:p, ext, kindLabel: inferred.label, visible:true, treeNodeId: node.id };
+          const feature = { id: 'point-'+featureIdx, name, type:'point', layer: marker, latlng:p, ext, kindLabel: inferred.label, pointColor, visible:true, treeNodeId: node.id };
           node.featureRef = feature;
           allFeatures.push(feature);
           pointCount++;
@@ -1023,19 +1548,44 @@
   // Scan every sheet and return all that have from/to/person columns (Tên kênh is OPTIONAL).
   // When Tên kênh is absent, the sheet name itself becomes the canal name —
   // this is the user's format: one sheet per canal.
+  // Scan rows to find the first row that looks like a real data header
+  // (has at least "từ k", "đến k", "người phụ trách" or similar columns).
+  // This handles files where the first 1-3 rows are titles/notes.
+  function findHeaderRow(sheet){
+    const raw = XLSX.utils.sheet_to_json(sheet, { header:1, defval:'' });
+    for(let i=0; i<Math.min(raw.length, 10); i++){
+      const rowStr = raw[i].join('|').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
+      const hasFrom   = /tu\s*k|from|bat\s*dau|k\s*bat/.test(rowStr);
+      const hasTo     = /den\s*k|to\b|ket\s*thuc|k\s*ket/.test(rowStr);
+      const hasPerson = /nguoi|person|phu\s*trach/.test(rowStr);
+      if(hasFrom && hasTo && hasPerson){
+        // Found header at row i — re-parse with this as header
+        const headerRow = raw[i];
+        const dataRows = raw.slice(i+1).filter(r => r.some(c=>c!=='')).map(r => {
+          const obj = {};
+          headerRow.forEach((h,j) => { if(h!=='') obj[String(h)] = r[j]??''; });
+          return obj;
+        });
+        return dataRows;
+      }
+    }
+    // Fallback: use default sheet_to_json (first row as header)
+    return XLSX.utils.sheet_to_json(sheet, { defval:'' });
+  }
+
   function pickAllDataSheets(wb){
     const result = [];
     for(const sheetName of wb.SheetNames){
       const sheet = wb.Sheets[sheetName];
-      const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+      const rows = findHeaderRow(sheet);
       if(!rows.length) continue;
       const sample = rows[0];
-      const nameKey = findKey(sample, ['tenkenh','kenh','tuyen','canal']); // optional
-      const fromKey = findKey(sample, ['kbatdau','tukbatdau','tu','from','batdau'], [nameKey]);
-      const toKey   = findKey(sample, ['kketthuc','denkketthuc','den','to','ketthuc'], [nameKey, fromKey]);
+      const nameKey = findKey(sample, ['tenkenh','kenh','tuyen','canal','tentuyenkenh','tuyenkenh']); // optional
+      const fromKey = findKey(sample, ['tuk','kbatdau','tukbatdau','tu','from','batdau','fromk'], [nameKey]);
+      const toKey   = findKey(sample, ['denk','kketthuc','denkketthuc','den','to','ketthuc','tok'], [nameKey, fromKey]);
       const personKey = findKey(sample, ['nguoiphutrach','phutrach','nguoiquanly','person'], [nameKey, fromKey, toKey]);
       if(fromKey && toKey && personKey){
-        result.push({ sheetName, rows, nameKey }); // nameKey may be null → use sheetName
+        result.push({ sheetName, rows, nameKey });
       }
     }
     return result;
@@ -1254,6 +1804,158 @@
     return { person:null, reason:'gap' };
   }
 
+  /* ===================== CLICK HANDLERS ===================== */
+  function handleCanalClick(feature, clickLatLng){
+    if(measureMode || drawMode) return;
+    // Polygon: use center instead of nearest-on-line
+    let station, near;
+    if(feature.latlngs && feature.latlngs.length >= 2 && feature.totalLength > 0){
+      near = nearestPointOnLine(feature.latlngs, clickLatLng);
+      station = formatStation(near.cumDist);
+    } else {
+      // Polygon or zero-length — show center coords
+      const bounds = feature.layer.getBounds ? feature.layer.getBounds() : null;
+      const center = bounds ? bounds.getCenter() : clickLatLng;
+      near = { point: { lat: center.lat, lng: center.lng }, cumDist: 0 };
+      station = null;
+    }
+    const key = stripDiacritics(feature.name);
+    // Try progressively looser matches:
+    // 1. exact stripped key
+    let segments = personSegments[key];
+    if(!segments){
+      // 2. substring match
+      const subKey = Object.keys(personSegments).find(k => k.includes(key) || key.includes(k));
+      if(subKey) segments = personSegments[subKey];
+    }
+    if(!segments){
+      // 3. common-word score (≥2 words of 3+ chars in common)
+      const words = key.split(/\s+/).filter(w=>w.length>=3);
+      const allKeys = Object.keys(personSegments);
+      const best = allKeys.map(k=>({k, score: words.filter(w=>k.split(/\s+/).includes(w)).length}))
+                          .filter(x=>x.score>=2).sort((a,b)=>b.score-a.score)[0];
+      if(best) segments = personSegments[best.k];
+    }
+    const lookup = findResponsible(near.cumDist, segments||[]);
+
+    if(highlightMarker) map.removeLayer(highlightMarker);
+    if(station){
+      highlightMarker = L.circleMarker([near.point.lat, near.point.lng], {
+        radius:8, color:'#fff', weight:2, fillColor:'#e85d75', fillOpacity:1
+      }).addTo(map);
+    }
+    renderCanalInfo(feature, station, near, lookup);
+    openInfoOverlay();
+  }
+
+  function handlePointClick(feature){
+    if(measureMode || drawMode) return;
+    if(highlightMarker){ map.removeLayer(highlightMarker); highlightMarker=null; }
+    renderPointInfo(feature);
+    openInfoOverlay();
+  }
+
+  /* ===================== INFO PANEL RENDER ===================== */
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function renderCanalInfo(feature, station, near, lookup){
+    const panel = document.getElementById('info-panel');
+    let personHtml, segmentRangeHtml = '';
+    if(lookup.reason==='no-data')       personHtml=`<span style="color:var(--warn)">Chưa nạp dữ liệu phụ trách (Excel)</span>`;
+    else if(lookup.reason==='before-first') personHtml=`<span style="color:var(--warn)">Trước đoạn đầu tiên — chưa xác định</span>`;
+    else if(lookup.reason==='after-last')   personHtml=`<span style="color:var(--warn)">Sau đoạn cuối cùng — chưa xác định</span>`;
+    else if(lookup.reason==='gap')          personHtml=`<span style="color:var(--warn)">Vị trí này nằm trong khoảng hở giữa hai đoạn</span>`;
+    else {
+      personHtml = escapeHtml(lookup.person);
+      if(lookup.from_m!==undefined)
+        segmentRangeHtml = `<div class="info-row"><span class="k">Đoạn phụ trách</span><span class="v">${formatStation(lookup.from_m)} → ${formatStation(lookup.to_m)}</span></div>`;
+      if(lookup.desc)
+        segmentRangeHtml += `<div class="ext-row" style="margin-top:8px;"><b>Mô tả đoạn:</b> ${escapeHtml(lookup.desc)}</div>`;
+    }
+    let extHtml = '';
+    if(feature.ext && feature.ext.length)
+      extHtml = `<div class="ext-data">`+feature.ext.map(e=>`<div class="ext-row"><b>${escapeHtml(e.k)}:</b> ${escapeHtml(e.v)}</div>`).join('')+`</div>`;
+    const relevantWarnings=(segmentWarnings||[]).filter(w=>w.startsWith(feature.name+':'));
+    const warningHtml = relevantWarnings.length
+      ? `<div class="note-box" style="background:#e0a23a22;border-color:#e0a23a44;color:var(--warn);">⚠ ${relevantWarnings.map(w=>escapeHtml(w)).join('<br>')}</div>` : '';
+
+    panel.innerHTML=`
+      <div class="info-card">
+        <span class="tag canal">Kênh / tuyến</span>
+        <h2>${escapeHtml(feature.name)}</h2>
+        ${feature.totalLength>0?`<div class="info-row"><span class="k">Chiều dài</span><span class="v">${feature.totalLength.toFixed(0)} m</span></div>`:''}
+        ${station?`<div class="info-row"><span class="k">Vị trí chọn</span><span class="v big">${station}</span></div>`:''}
+        <div class="info-row"><span class="k">Tọa độ</span><span class="v">${near.point.lat.toFixed(6)}, ${near.point.lng.toFixed(6)}</span></div>
+        <div class="info-row"><span class="k">Người phụ trách</span><span class="v person">${personHtml}</span></div>
+        ${segmentRangeHtml}${extHtml}${warningHtml}
+        <a href="bien-ban.html?lat=${near.point.lat.toFixed(6)}&lng=${near.point.lng.toFixed(6)}&ct=${encodeURIComponent(feature.name)}&km=${encodeURIComponent(station||'')}"
+           style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;
+           background:#c0392b;color:#fff;padding:12px;border-radius:8px;
+           text-decoration:none;font-weight:700;font-size:13.5px;">
+          ⚠️ Lập biên bản vi phạm tại đây
+        </a>
+      </div>`;
+  }
+
+  function renderPointInfo(feature){
+    const panel = document.getElementById('info-panel');
+    let extHtml='';
+    if(feature.ext && feature.ext.length)
+      extHtml=`<div class="ext-data">`+feature.ext.map(e=>`<div class="ext-row"><b>${escapeHtml(e.k)}:</b> ${escapeHtml(e.v)}</div>`).join('')+`</div>`;
+
+    panel.innerHTML=`
+      <div class="info-card">
+        <span class="tag point">${escapeHtml(feature.kindLabel||'Điểm công trình')}</span>
+        <h2>${escapeHtml(feature.name)}</h2>
+        <div class="info-row"><span class="k">Tọa độ</span><span class="v">${feature.latlng.lat.toFixed(6)}, ${feature.latlng.lng.toFixed(6)}</span></div>
+        ${extHtml}
+        ${(!feature.ext||!feature.ext.length)?`<div class="note-box">Bạn có thể thêm ghi chú vào thẻ &lt;description&gt; của Placemark này trong KML/KMZ — nội dung sẽ tự hiện ở đây.</div>`:''}
+        <a href="bien-ban.html?lat=${feature.latlng.lat.toFixed(6)}&lng=${feature.latlng.lng.toFixed(6)}&ct=${encodeURIComponent(feature.name)}"
+           style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;
+           background:#c0392b;color:#fff;padding:12px;border-radius:8px;
+           text-decoration:none;font-weight:700;font-size:13.5px;">
+          ⚠️ Lập biên bản vi phạm tại đây
+        </a>
+      </div>`;
+  }
+
+  /* ===================== SEARCH ===================== */
+  const searchInput  = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+
+  searchInput.addEventListener('input', ()=>{
+    const q = stripDiacritics(searchInput.value);
+    searchResults.innerHTML='';
+    if(!q) return;
+    const matches = allFeatures.filter(f=> stripDiacritics(f.name).includes(q)).slice(0,30);
+    matches.forEach(f=>{
+      const div = document.createElement('div');
+      div.className='result-item';
+      const color = f.type==='canal' ? (f.baseColor||'var(--canal)') : (f.pointColor||'var(--gate)');
+      div.innerHTML=`<span class="dot" style="background:${color}"></span><span class="nm">${escapeHtml(f.name)}</span><span class="ty">${f.type==='canal'?'KÊNH':'ĐIỂM'}</span>`;
+      div.addEventListener('click', ()=>{
+        if(f.type==='canal'){
+          map.flyToBounds(f.layer.getBounds(), { padding:[60,60], duration:1.2 });
+          setTimeout(()=>{
+            f.layer.setStyle && f.layer.setStyle({ color:'#7fd4ec', weight:(f.baseWeight||4)+2 });
+            setTimeout(()=> f.layer.setStyle && f.layer.setStyle({ color:f.baseColor||'#4fb6e8', weight:f.baseWeight||4 }), 800);
+            const mid = f.latlngs ? f.latlngs[Math.floor(f.latlngs.length/2)] : f.layer.getBounds().getCenter();
+            handleCanalClick(f, mid); openInfoOverlay();
+          }, 800);
+        } else {
+          map.flyTo([f.latlng.lat, f.latlng.lng], 17, { duration:1.2 });
+          setTimeout(()=> handlePointClick(f), 600);
+        }
+      });
+      searchResults.appendChild(div);
+    });
+    if(matches.length===0) searchResults.innerHTML='<div class="status-line">Không tìm thấy kết quả phù hợp.</div>';
+  });
+
+  function renderSearchIndexHint(){ /* placeholder */ }
+
   /* ===================== LEGEND TREE (Google-Earth-style Places panel) ===================== */
   const legendTreeEl = document.getElementById('legend-tree');
 
@@ -1445,146 +2147,312 @@
     }
   });
 
-  /* ===================== CLICK HANDLERS ===================== */
-  function handleCanalClick(feature, clickLatLng){
-    if(measureMode) return;
-    const near = nearestPointOnLine(feature.latlngs, clickLatLng);
-    const station = formatStation(near.cumDist);
-    const key = stripDiacritics(feature.name);
-    const segments = personSegments[key];
-    const lookup = findResponsible(near.cumDist, segments||[]);
+  /* ===================== DRAW TOOL (vẽ & lưu) ===================== */
+  let drawMode = null; // 'point' | 'line' | null
+  let drawPoints = []; // points being drawn for current line
+  let drawPreviewLine = null;
+  let drawnFeatures = []; // {id, type:'point'|'line', name, kind, desc, color, latlngs/latlng, layer}
+  let pendingDrawData = null; // temp storage while popup is open
+  let drawIdCounter = 0;
 
-    if(highlightMarker) map.removeLayer(highlightMarker);
-    highlightMarker = L.circleMarker([near.point.lat, near.point.lng], {
-      radius:8, color:'#fff', weight:2, fillColor:'#e85d75', fillOpacity:1
-    }).addTo(map);
+  const btnDrawPoint  = document.getElementById('btn-draw-point');
+  const btnDrawLine   = document.getElementById('btn-draw-line');
+  const btnDrawClear  = document.getElementById('btn-draw-clear');
+  const btnExportKml  = document.getElementById('btn-export-kml');
+  const btnSaveGithub = document.getElementById('btn-save-github');
+  const drawStatus    = document.getElementById('draw-status');
+  const drawListEl    = document.getElementById('draw-list');
+  const drawPopup     = document.getElementById('draw-popup');
+  const githubDialog  = document.getElementById('github-dialog');
 
-    renderCanalInfo(feature, station, near, lookup);
-    openInfoOverlay();
+  function setDrawMode(mode){
+    if(drawMode === mode){ stopDraw(); return; }
+    stopMeasuring(true); // stop measure tool if active
+    stopDraw();
+    drawMode = mode;
+    btnDrawPoint.classList.toggle('active', mode==='point');
+    btnDrawLine.classList.toggle('active', mode==='line');
+    map.getContainer().style.cursor = 'crosshair';
+    if(mode === 'point') drawStatus.textContent = 'Click lên bản đồ để đặt điểm. Esc để hủy.';
+    if(mode === 'line')  drawStatus.textContent = 'Click các điểm dọc theo đường. Double-click hoặc Enter để kết thúc. Esc để hủy.';
   }
 
-  function handlePointClick(feature){
-    if(measureMode) return;
-    if(highlightMarker){ map.removeLayer(highlightMarker); highlightMarker=null; }
-    renderPointInfo(feature);
-    openInfoOverlay();
+  function stopDraw(){
+    drawMode = null;
+    drawPoints = [];
+    btnDrawPoint.classList.remove('active');
+    btnDrawLine.classList.remove('active');
+    map.getContainer().style.cursor = '';
+    if(drawPreviewLine){ map.removeLayer(drawPreviewLine); drawPreviewLine = null; }
+    drawStatus.textContent = 'Chọn công cụ vẽ, click trên bản đồ.';
   }
 
-  /* ===================== INFO PANEL RENDER ===================== */
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
+  btnDrawPoint.addEventListener('click', ()=> setDrawMode('point'));
+  btnDrawLine.addEventListener('click',  ()=> setDrawMode('line'));
 
-  function renderCanalInfo(feature, station, near, lookup){
-    const panel = document.getElementById('info-panel');
-    let personHtml;
-    let segmentRangeHtml = '';
-    if(lookup.reason === 'no-data'){
-      personHtml = `<span style="color:var(--warn)">Chưa nạp dữ liệu phụ trách (Excel) cho kênh này</span>`;
-    } else if(lookup.reason === 'before-first'){
-      personHtml = `<span style="color:var(--warn)">Trước đoạn đầu tiên trong Excel — chưa xác định</span>`;
-    } else if(lookup.reason === 'after-last'){
-      personHtml = `<span style="color:var(--warn)">Sau đoạn cuối cùng trong Excel — chưa xác định</span>`;
-    } else if(lookup.reason === 'gap'){
-      personHtml = `<span style="color:var(--warn)">Vị trí này rơi vào khoảng hở giữa hai đoạn trong Excel — chưa có ai phụ trách</span>`;
-    } else {
-      personHtml = escapeHtml(lookup.person);
-      if(lookup.from_m!==undefined){
-        segmentRangeHtml = `<div class="info-row"><span class="k">Đoạn phụ trách</span><span class="v">${formatStation(lookup.from_m)} → ${formatStation(lookup.to_m)}</span></div>`;
+  // Map click while drawing
+  map.on('click', (e)=>{
+    if(!drawMode) return;
+    if(drawMode === 'point'){
+      pendingDrawData = { type:'point', latlng: e.latlng };
+      document.getElementById('draw-popup-title').textContent = 'Thêm thông tin điểm';
+      document.getElementById('draw-type').value = 'Cống';
+      openDrawPopup();
+    } else if(drawMode === 'line'){
+      drawPoints.push(e.latlng);
+      if(drawPreviewLine) map.removeLayer(drawPreviewLine);
+      if(drawPoints.length >= 2){
+        drawPreviewLine = L.polyline(drawPoints, { color:'#e85d75', weight:3, dashArray:'6,5' }).addTo(map);
       }
-      if(lookup.desc){
-        segmentRangeHtml += `<div class="ext-row" style="margin-top:8px;"><b>Mô tả đoạn:</b> ${escapeHtml(lookup.desc)}</div>`;
-      }
-    }
-
-    let extHtml = '';
-    if(feature.ext && feature.ext.length){
-      extHtml = `<div class="ext-data">` + feature.ext.map(e=>
-        `<div class="ext-row"><b>${escapeHtml(e.k)}:</b> ${escapeHtml(e.v)}</div>`
-      ).join('') + `</div>`;
-    }
-
-    let warningHtml = '';
-    const relevantWarnings = (segmentWarnings||[]).filter(w => w.startsWith(feature.name + ':'));
-    if(relevantWarnings.length){
-      warningHtml = `<div class="note-box" style="background:#e0a23a22;border-color:#e0a23a44;color:var(--warn);">
-        ⚠ Dữ liệu Excel của tuyến này có vấn đề:<br>${relevantWarnings.map(w=>escapeHtml(w)).join('<br>')}
-      </div>`;
-    }
-
-    panel.innerHTML = `
-      <div class="info-card">
-        <span class="tag canal">Kênh / tuyến</span>
-        <h2>${escapeHtml(feature.name)}</h2>
-        <div class="info-row"><span class="k">Tổng chiều dài</span><span class="v">${feature.totalLength.toFixed(0)} m</span></div>
-        <div class="info-row"><span class="k">Vị trí vừa chọn</span><span class="v big">${station}</span></div>
-        <div class="info-row"><span class="k">Tọa độ (vị trí chọn)</span><span class="v">${near.point.lat.toFixed(6)}, ${near.point.lng.toFixed(6)}</span></div>
-        <div class="info-row"><span class="k">Người phụ trách</span><span class="v person">${personHtml}</span></div>
-        ${segmentRangeHtml}
-        ${extHtml}
-        ${warningHtml}
-        <div class="note-box">Lý trình K+ được tính bằng khoảng cách dọc theo tuyến kênh từ điểm đầu (theo thứ tự tọa độ trong file KML/KMZ). Người phụ trách = người được gán cho đoạn [K bắt đầu → K kết thúc] chứa vị trí vừa chọn, theo file Excel.</div>
-      </div>`;
-  }
-
-  function renderPointInfo(feature){
-    const panel = document.getElementById('info-panel');
-    let extHtml = '';
-    if(feature.ext && feature.ext.length){
-      extHtml = `<div class="ext-data">` + feature.ext.map(e=>
-        `<div class="ext-row"><b>${escapeHtml(e.k)}:</b> ${escapeHtml(e.v)}</div>`
-      ).join('') + `</div>`;
-    }
-
-    panel.innerHTML = `
-      <div class="info-card">
-        <span class="tag point">${escapeHtml(feature.kindLabel||'Điểm công trình')}</span>
-        <h2>${escapeHtml(feature.name)}</h2>
-        <div class="info-row"><span class="k">Tọa độ</span><span class="v">${feature.latlng.lat.toFixed(6)}, ${feature.latlng.lng.toFixed(6)}</span></div>
-        ${extHtml}
-        ${(!feature.ext || !feature.ext.length) ? `<div class="note-box">Chưa có mô tả cho điểm này. Bạn có thể thêm ghi chú (kênh liên quan, K cọc, mô tả…) vào thẻ &lt;description&gt; của Placemark này trong KML/KMZ — nội dung sẽ tự hiện ở đây.</div>` : ''}
-      </div>`;
-  }
-
-  /* ===================== SEARCH ===================== */
-  const searchInput = document.getElementById('search-input');
-  const searchResults = document.getElementById('search-results');
-
-  searchInput.addEventListener('input', ()=>{
-    const q = stripDiacritics(searchInput.value);
-    searchResults.innerHTML = '';
-    if(!q){ return; }
-    const matches = allFeatures.filter(f=> stripDiacritics(f.name).includes(q)).slice(0,30);
-    matches.forEach(f=>{
-      const div = document.createElement('div');
-      div.className = 'result-item';
-      const color = f.type === 'canal' ? (f.baseColor||'var(--canal)') : (f.layer.options.fillColor||'var(--gate)');
-      div.innerHTML = `<span class="dot" style="background:${color}"></span><span class="nm">${escapeHtml(f.name)}</span><span class="ty">${f.type==='canal'?'KÊNH':'ĐIỂM'}</span>`;
-      div.addEventListener('click', ()=>{
-        if(f.type === 'canal'){
-          map.flyToBounds(f.layer.getBounds(), { padding:[60,60], duration:1.2 });
-          // flash highlight after fly completes
-          setTimeout(()=>{
-            f.layer.setStyle({ color:'#7fd4ec', weight:(f.baseWeight||4)+2 });
-            setTimeout(()=> f.layer.setStyle({ color:f.baseColor||'#4fb6e8', weight:f.baseWeight||4 }), 800);
-            renderCanalInfo(f, formatStation(0), { point: f.latlngs[0] }, findResponsible(0, personSegments[stripDiacritics(f.name)]||[]));
-            openInfoOverlay();
-          }, 800);
-        } else {
-          map.flyTo([f.latlng.lat, f.latlng.lng], 17, { duration:1.2 });
-          setTimeout(()=> handlePointClick(f), 600);
-        }
-      });
-      searchResults.appendChild(div);
-    });
-    if(matches.length===0){
-      searchResults.innerHTML = '<div class="status-line">Không tìm thấy kết quả phù hợp.</div>';
     }
   });
 
-  function renderSearchIndexHint(){
-    // no-op placeholder for future enhancements (e.g. fuzzy ranking)
+  // Rubber-band preview for line
+  map.on('mousemove', (e)=>{
+    if(drawMode !== 'line' || drawPoints.length === 0) return;
+    if(drawPreviewLine) map.removeLayer(drawPreviewLine);
+    drawPreviewLine = L.polyline([...drawPoints, e.latlng], { color:'#e85d75', weight:2, dashArray:'4,5', opacity:.6 }).addTo(map);
+  });
+
+  map.on('dblclick', (e)=>{
+    if(drawMode !== 'line') return;
+    if(drawPoints.length < 2){ stopDraw(); return; }
+    pendingDrawData = { type:'line', latlngs: [...drawPoints] };
+    document.getElementById('draw-popup-title').textContent = 'Thêm thông tin đường';
+    document.getElementById('draw-type').value = 'Kênh';
+    if(drawPreviewLine){ map.removeLayer(drawPreviewLine); drawPreviewLine = null; }
+    openDrawPopup();
+  });
+
+  document.addEventListener('keydown', (e)=>{
+    if(drawMode){
+      if(e.key === 'Escape'){ stopDraw(); }
+      else if(e.key === 'Enter' && drawMode === 'line'){
+        if(drawPoints.length >= 2){
+          pendingDrawData = { type:'line', latlngs: [...drawPoints] };
+          document.getElementById('draw-popup-title').textContent = 'Thêm thông tin đường';
+          document.getElementById('draw-type').value = 'Kênh';
+          if(drawPreviewLine){ map.removeLayer(drawPreviewLine); drawPreviewLine = null; }
+          openDrawPopup();
+        }
+      }
+    }
+  });
+
+  // ---- Popup ----
+  function openDrawPopup(){
+    stopDraw();
+    document.getElementById('draw-name').value = '';
+    document.getElementById('draw-desc').value = '';
+    drawPopup.style.display = 'flex';
+    setTimeout(()=> document.getElementById('draw-name').focus(), 50);
   }
+  function closeDrawPopup(){ drawPopup.style.display = 'none'; pendingDrawData = null; }
+
+  document.getElementById('draw-popup-cancel').addEventListener('click', closeDrawPopup);
+  drawPopup.addEventListener('click', (e)=>{ if(e.target === drawPopup) closeDrawPopup(); });
+
+  document.getElementById('draw-popup-save').addEventListener('click', ()=>{
+    const name  = document.getElementById('draw-name').value.trim();
+    const kind  = document.getElementById('draw-type').value;
+    const desc  = document.getElementById('draw-desc').value.trim();
+    const color = document.getElementById('draw-color').value;
+    if(!name){ alert('Vui lòng nhập tên cho đối tượng.'); return; }
+    if(!pendingDrawData){ closeDrawPopup(); return; }
+
+    const id = 'draw-' + (++drawIdCounter);
+    let layer;
+    const feat = { id, name, kind, desc, color, type: pendingDrawData.type };
+
+    if(pendingDrawData.type === 'point'){
+      feat.latlng = pendingDrawData.latlng;
+      layer = L.circleMarker([feat.latlng.lat, feat.latlng.lng], {
+        radius:8, color:'#fff', weight:2, fillColor:color, fillOpacity:.95
+      }).addTo(map);
+      layer.bindTooltip(name, { permanent:false });
+      layer.on('click', ()=> openEditDrawFeature(id));
+    } else {
+      feat.latlngs = pendingDrawData.latlngs;
+      layer = L.polyline(feat.latlngs, { color, weight:4, opacity:.9 }).addTo(map);
+      layer.bindTooltip(name, { permanent:false, sticky:true });
+      layer.on('click', ()=> openEditDrawFeature(id));
+    }
+    feat.layer = layer;
+    drawnFeatures.push(feat);
+    closeDrawPopup();
+    renderDrawList();
+    updateDrawButtons();
+  });
+
+  function openEditDrawFeature(id){
+    const feat = drawnFeatures.find(f=>f.id===id);
+    if(!feat) return;
+    pendingDrawData = feat.type === 'point' ? { type:'point', latlng: feat.latlng } : { type:'line', latlngs: feat.latlngs };
+    document.getElementById('draw-popup-title').textContent = 'Chỉnh sửa đối tượng';
+    document.getElementById('draw-name').value = feat.name;
+    document.getElementById('draw-type').value = feat.kind;
+    document.getElementById('draw-desc').value = feat.desc;
+    document.getElementById('draw-color').value = feat.color;
+    // Replace on save
+    document.getElementById('draw-popup-save').onclick = ()=>{
+      feat.name  = document.getElementById('draw-name').value.trim() || feat.name;
+      feat.kind  = document.getElementById('draw-type').value;
+      feat.desc  = document.getElementById('draw-desc').value.trim();
+      feat.color = document.getElementById('draw-color').value;
+      if(feat.type === 'point') feat.layer.setStyle({ fillColor: feat.color });
+      else feat.layer.setStyle({ color: feat.color });
+      feat.layer.unbindTooltip();
+      feat.layer.bindTooltip(feat.name, { permanent:false, sticky: feat.type==='line' });
+      closeDrawPopup();
+      renderDrawList();
+      document.getElementById('draw-popup-save').onclick = saveDrawFeature;
+    };
+    drawPopup.style.display = 'flex';
+    setTimeout(()=> document.getElementById('draw-name').focus(), 50);
+  }
+  // default save handler (reassigned in edit)
+  function saveDrawFeature(){ document.getElementById('draw-popup-save').click(); }
+
+  function deleteDrawFeature(id){
+    const idx = drawnFeatures.findIndex(f=>f.id===id);
+    if(idx === -1) return;
+    map.removeLayer(drawnFeatures[idx].layer);
+    drawnFeatures.splice(idx, 1);
+    renderDrawList();
+    updateDrawButtons();
+  }
+
+  function renderDrawList(){
+    if(!drawnFeatures.length){ drawListEl.innerHTML = ''; return; }
+    drawListEl.innerHTML = drawnFeatures.map(f=>`
+      <div class="draw-item">
+        <span class="di-swatch" style="background:${f.color};${f.type==='line'?'border-radius:2px;':''}" ></span>
+        <span class="di-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>
+        <span class="di-type" style="font-size:9.5px;color:var(--text-2);margin-right:2px;">${escapeHtml(f.kind)}</span>
+        <button class="di-del" data-del="${f.id}">✕</button>
+      </div>`).join('');
+    drawListEl.querySelectorAll('[data-del]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{ e.stopPropagation(); deleteDrawFeature(btn.dataset.del); });
+    });
+  }
+
+  function updateDrawButtons(){
+    const has = drawnFeatures.length > 0;
+    btnExportKml.style.display  = has ? '' : 'none';
+    btnSaveGithub.style.display = has ? '' : 'none';
+    btnDrawClear.style.display  = has ? '' : 'none';
+  }
+
+  btnDrawClear.addEventListener('click', ()=>{
+    if(!confirm('Xóa tất cả đối tượng đã vẽ?')) return;
+    drawnFeatures.forEach(f=> map.removeLayer(f.layer));
+    drawnFeatures = [];
+    renderDrawList();
+    updateDrawButtons();
+  });
+
+  // ---- Export KML ----
+  function cssToKmlColor(hex, alpha){
+    // CSS #rrggbb → KML ffbbggrr
+    const a = Math.round((alpha||1)*255).toString(16).padStart(2,'0');
+    const r = hex.slice(1,3), g = hex.slice(3,5), b = hex.slice(5,7);
+    return a + b + g + r;
+  }
+
+  function buildDrawnKml(){
+    const placemarks = drawnFeatures.map(f=>{
+      const styleId = `style-${f.id}`;
+      let styleXml, geometryXml;
+      if(f.type === 'point'){
+        styleXml = `<Style id="${styleId}"><IconStyle><color>${cssToKmlColor(f.color)}</color><scale>1</scale></IconStyle></Style>`;
+        geometryXml = `<Point><coordinates>${f.latlng.lng},${f.latlng.lat},0</coordinates></Point>`;
+      } else {
+        styleXml = `<Style id="${styleId}"><LineStyle><color>${cssToKmlColor(f.color)}</color><width>3</width></LineStyle></Style>`;
+        const coords = f.latlngs.map(p=>`${p.lng},${p.lat},0`).join(' ');
+        geometryXml = `<LineString><tessellate>1</tessellate><coordinates>${coords}</coordinates></LineString>`;
+      }
+      return `  ${styleXml}
+  <Placemark>
+    <name>${escapeXml(f.name)}</name>
+    <description>${escapeXml(f.desc)}</description>
+    <styleUrl>#${styleId}</styleUrl>
+    ${geometryXml}
+  </Placemark>`;
+    }).join('\n');
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>Dữ liệu vẽ thêm</name>
+${placemarks}
+</Document>
+</kml>`;
+  }
+
+  function escapeXml(s){
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  btnExportKml.addEventListener('click', ()=>{
+    const kmlStr = buildDrawnKml();
+    const blob = new Blob([kmlStr], { type:'application/vnd.google-earth.kml+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'du-lieu-ve-them.kml'; a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // ---- Save to GitHub ----
+  btnSaveGithub.addEventListener('click', ()=>{
+    // Pre-fill repo from current URL if on github.io
+    const m = window.location.hostname.match(/^(.+)\.github\.io$/);
+    if(m) document.getElementById('gh-repo').value = m[1] + '/' + window.location.pathname.split('/')[1];
+    githubDialog.style.display = 'flex';
+    setTimeout(()=> document.getElementById('gh-token').focus(), 50);
+  });
+  document.getElementById('gh-cancel').addEventListener('click', ()=>{ githubDialog.style.display='none'; });
+  githubDialog.addEventListener('click', (e)=>{ if(e.target===githubDialog) githubDialog.style.display='none'; });
+
+  document.getElementById('gh-confirm').addEventListener('click', async ()=>{
+    const token    = document.getElementById('gh-token').value.trim();
+    const repo     = document.getElementById('gh-repo').value.trim();
+    const filename = document.getElementById('gh-filename').value.trim();
+    const ghStatus = document.getElementById('gh-status');
+    if(!token || !repo || !filename){ ghStatus.textContent='Vui lòng điền đầy đủ thông tin.'; ghStatus.className='status-line err'; return; }
+
+    ghStatus.textContent = 'Đang kết nối GitHub…';
+    ghStatus.className = 'status-line';
+
+    try{
+      // Get current file SHA (needed to update existing file)
+      const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+      });
+      let sha = null;
+      if(getRes.ok){ const data = await getRes.json(); sha = data.sha; }
+
+      const kmlStr = buildDrawnKml();
+      const content = btoa(unescape(encodeURIComponent(kmlStr)));
+      const body = { message: 'Cập nhật dữ liệu vẽ thêm', content, ...(sha ? { sha } : {}) };
+
+      const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      if(putRes.ok){
+        ghStatus.textContent = '✅ Đã lưu lên GitHub thành công! Chờ ~1 phút để GitHub Pages cập nhật.';
+        ghStatus.className = 'status-line ok';
+      } else {
+        const err = await putRes.json();
+        throw new Error(err.message || putRes.status);
+      }
+    }catch(err){
+      ghStatus.textContent = 'Lỗi: ' + err.message;
+      ghStatus.className = 'status-line err';
+    }
+  });
 
   /* ===================== AUTO-LOAD FROM SHARE LINK / SAME-FOLDER FILES ===================== */
   // Two ways to auto-load, tried in order:

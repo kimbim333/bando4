@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Biên bản vi phạm - Xí nghiệp Thủy lợi Nhật Tựu</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f5f5f0; --card:#fff; --border:#ccc; --accent:#1a5276;
+  --accent-light:#2980b9; --text:#222; --text2:#555; --red:#c0392b;
+  --sans:'Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;}
+
+/* ===== HEADER ===== */
+.app-header{
+  background:var(--accent);color:#fff;
+  padding:12px 16px;display:flex;align-items:center;gap:10px;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.app-header h1{font-size:15px;font-weight:700;flex:1;}
+.app-header .subtitle{font-size:11px;opacity:.8;}
+.btn-back{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;padding:6px 12px;border-radius:6px;font-size:13px;cursor:pointer;text-decoration:none;}
+
+/* ===== TABS ===== */
+.tabs{display:flex;background:#fff;border-bottom:2px solid var(--accent);overflow-x:auto;
+  position:sticky;top:55px;z-index:99;box-shadow:0 2px 4px rgba(0,0,0,.1);}
+.tab-btn{flex:none;padding:11px 16px;border:none;background:transparent;
+  font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;
+  white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;
+  transition:color .15s,border-color .15s;}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-btn:hover{color:var(--accent);}
+
+/* ===== FORM SECTIONS ===== */
+.tab-panel{display:none;padding:16px;}
+.tab-panel.active{display:block;}
+
+.form-section{
+  background:var(--card);border-radius:10px;
+  border:1px solid #ddd;margin-bottom:16px;overflow:hidden;
+}
+.section-header{
+  background:var(--accent);color:#fff;
+  padding:10px 14px;font-size:13px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.section-body{padding:14px;}
+
+.field-row{display:flex;gap:10px;margin-bottom:10px;}
+.field-row .field{flex:1;min-width:0;}
+.field label{display:block;font-size:11.5px;color:var(--text2);
+  font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;}
+.field input,.field textarea,.field select{
+  width:100%;border:1px solid var(--border);border-radius:6px;
+  padding:9px 10px;font-size:13.5px;font-family:var(--sans);
+  background:#fff;outline:none;transition:border-color .15s;
+}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent-light);}
+.field textarea{resize:vertical;min-height:80px;}
+
+/* ===== GPS ROW ===== */
+.gps-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:10px;}
+.gps-row .field{flex:1;}
+.btn-gps{
+  background:var(--accent);color:#fff;border:none;border-radius:6px;
+  padding:9px 12px;font-size:12px;cursor:pointer;white-space:nowrap;
+  height:38px;flex:none;
+}
+.btn-gps:hover{background:var(--accent-light);}
+
+/* ===== PHOTO SECTION ===== */
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:10px;}
+.photo-thumb{
+  position:relative;border-radius:8px;overflow:hidden;
+  aspect-ratio:1;border:1px solid #ddd;background:#f0f0f0;
+}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;}
+.photo-thumb .del-btn{
+  position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);
+  color:#fff;border:none;border-radius:50%;width:22px;height:22px;
+  cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;
+}
+.btn-camera{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;border:2px dashed var(--border);border-radius:8px;
+  aspect-ratio:1;background:#f8f8f8;cursor:pointer;
+  font-size:11px;color:var(--text2);transition:border-color .15s;
+}
+.btn-camera:hover{border-color:var(--accent);}
+.btn-camera .ic{font-size:28px;}
+.camera-input{display:none;}
+
+/* ===== SKETCH CANVAS ===== */
+.sketch-toolbar{
+  display:flex;gap:8px;padding:8px;background:#f0f0f0;
+  border-bottom:1px solid #ddd;flex-wrap:wrap;align-items:center;
+}
+.sketch-toolbar select,.sketch-toolbar input[type=color],.sketch-toolbar input[type=range]{
+  padding:4px;border:1px solid #ccc;border-radius:4px;font-size:12px;
+}
+.sketch-toolbar label{font-size:11px;color:var(--text2);}
+#sketchCanvas{
+  display:block;width:100%;cursor:crosshair;touch-action:none;
+  background:#fff;border:none;
+}
+.btn-clear-sketch,.btn-undo-sketch{
+  padding:5px 10px;border:1px solid #ccc;border-radius:4px;
+  background:#fff;font-size:12px;cursor:pointer;
+}
+.btn-clear-sketch:hover,.btn-undo-sketch:hover{background:#eee;}
+
+/* ===== ACTION BUTTONS ===== */
+.action-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:#fff;border-top:1px solid #ddd;
+  padding:12px 16px;display:flex;gap:10px;
+  box-shadow:0 -4px 12px rgba(0,0,0,.1);z-index:100;
+}
+.btn-primary{
+  flex:1;background:var(--accent);color:#fff;border:none;border-radius:8px;
+  padding:13px;font-size:14px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-primary:hover{background:var(--accent-light);}
+.btn-secondary{
+  flex:1;background:#f0f0f0;color:var(--text);border:1px solid #ddd;border-radius:8px;
+  padding:13px;font-size:14px;font-weight:600;cursor:pointer;
+}
+.btn-secondary:hover{background:#e0e0e0;}
+.spacer-bottom{height:80px;}
+
+/* ===== VIOLATION LIST (Tab 4) ===== */
+.vp-card{
+  background:#fff;border:1px solid #ddd;border-radius:10px;
+  margin-bottom:12px;overflow:hidden;
+}
+.vp-card-header{
+  padding:10px 14px;background:#eaf2ff;
+  display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;
+}
+.vp-card-body{padding:12px 14px;font-size:12.5px;color:var(--text2);}
+.vp-card-body .info-row{display:flex;gap:6px;margin-bottom:4px;}
+.vp-card-body .info-row .label{color:var(--text2);flex:none;width:110px;}
+.vp-card-body .info-row .val{color:var(--text);font-weight:600;}
+.vp-card-actions{padding:8px 14px;border-top:1px solid #eee;display:flex;gap:8px;}
+.vp-btn{padding:7px 12px;border-radius:6px;font-size:12px;cursor:pointer;
+  border:1px solid transparent;font-weight:600;}
+.vp-btn.edit{background:#eaf2ff;color:var(--accent);border-color:#2980b922;}
+.vp-btn.pdf{background:#e8f8e8;color:#1a7431;border-color:#27ae6022;}
+.vp-btn.del{background:#fdecea;color:var(--red);border-color:#c0392b22;}
+
+/* ===== STATUS ===== */
+.status-badge{
+  display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;
+}
+.status-badge.open{background:#fef3cd;color:#856404;}
+.status-badge.done{background:#d4edda;color:#155724;}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media(max-width:600px){
+  .field-row{flex-direction:column;gap:6px;}
+}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div>
+    <h1>📋 Biên bản vi phạm thủy lợi</h1>
+    <div class="subtitle">Xí nghiệp Thủy lợi Nhật Tựu</div>
+  </div>
+  <a href="index.html" class="btn-back">🗺 Bản đồ</a>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('bb')">Biên bản</button>
+  <button class="tab-btn" onclick="switchTab('soho')">Sơ họa</button>
+  <button class="tab-btn" onclick="switchTab('anh')">Ảnh HT</button>
+  <button class="tab-btn" onclick="switchTab('dsh')">Danh sách</button>
+</div>
+
+<!-- ========== TAB 1: BIÊN BẢN LÀM VIỆC ========== -->
+<div id="tab-bb" class="tab-panel active">
+
+  <div class="form-section">
+    <div class="section-header">🏛 Thông tin lập biên bản</div>
+    <div class="section-body">
+      <div class="field-row">
+        <div class="field">
+          <label>Số biên bản (lần)</label>
+          <input type="number" id="bb-so" value="1" min="1"/>
+        </div>
+        <div class="field">
+          <label>Ngày lập</label>
+          <input type="date" id="bb-ngay"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Giờ lập</label>
+          <input type="time" id="bb-gio"/>
+        </div>
+        <div class="field">
+          <label>Địa điểm lập</label>
+          <input type="text" id="bb-diadiem" placeholder="TDP Thọ Lão, P. Kim Thanh..."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-header">👮 Người lập biên bản</div>
+    <div class="section-body">
+      <div class="field-row">
+        <div class="field">
+          <label>Họ tên (người 1)</label>
+          <input type="text" id="bb-nguoi1" placeholder="VD: Phạm Đức Phúc"/>
+        </div>
+        <div class="field">
+          <label>Chức vụ</label>
+          <input type="text" id="bb-chucvu1" placeholder="VD: GĐXN"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Họ tên (người 2)</label>
+          <input type="text" id="bb-nguoi2" placeholder="VD: Lê Trọng Tuần"/>
+        </div>
+        <div class="field">
+          <label>Chức vụ</label>
+          <input type="text" id="bb-chucvu2" placeholder="VD: Cán bộ KT"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>Đơn vị</label>
+        <input type="text" id="bb-donvi" value="Xí nghiệp Thủy lợi Nhật Tựu"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-header">⚠️ Chủ thể vi phạm</div>
+    <div class="section-body">
+      <div class="field-row">
+        <div class="field">
+          <label>Họ tên người vi phạm</label>
+          <input type="text" id="bb-vp-ten" placeholder="VD: Vũ Thị Dắc"/>
+        </div>
+        <div class="field">
+          <label>Giới tính</label>
+          <select id="bb-vp-gioitinh">
+            <option>Nữ</option><option>Nam</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Quốc tịch</label>
+          <input type="text" id="bb-vp-quoctich" value="Việt Nam"/>
+        </div>
+        <div class="field">
+          <label>Nghề nghiệp</label>
+          <input type="text" id="bb-vp-nghenghiep" placeholder=""/>
+        </div>
+      </div>
+      <div class="field">
+        <label>Nơi ở hiện tại</label>
+        <input type="text" id="bb-vp-noio" placeholder="TDP Thọ Lão 2, P. Kim Thanh, Ninh Bình"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-header">📍 Vị trí vi phạm</div>
+    <div class="section-body">
+      <div class="field">
+        <label>Tên công trình</label>
+        <input type="text" id="bb-ct" placeholder="VD: Đê sông Nhuệ"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Phường/xã</label>
+          <input type="text" id="bb-phuong" placeholder="Kim Thanh"/>
+        </div>
+        <div class="field">
+          <label>Tỉnh</label>
+          <input type="text" id="bb-tinh" value="Ninh Bình"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Phía</label>
+          <input type="text" id="bb-phia" placeholder="VD: Phía đồng"/>
+        </div>
+        <div class="field">
+          <label>Bờ</label>
+          <input type="text" id="bb-bo" placeholder="VD: Hữu"/>
+        </div>
+        <div class="field">
+          <label>Sông</label>
+          <input type="text" id="bb-song" placeholder="VD: Nhuệ"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Từ Km</label>
+          <input type="text" id="bb-tu-km" placeholder="K68+225"/>
+        </div>
+        <div class="field">
+          <label>Đến Km</label>
+          <input type="text" id="bb-den-km" placeholder="K68+227"/>
+        </div>
+      </div>
+
+      <div class="gps-row">
+        <div class="field">
+          <label>Tọa độ X (Điểm đầu)</label>
+          <input type="text" id="bb-x1" placeholder="20.622.82"/>
+        </div>
+        <div class="field">
+          <label>Y (Điểm đầu)</label>
+          <input type="text" id="bb-y1" placeholder="105.922.02"/>
+        </div>
+        <button class="btn-gps" onclick="getGPS()">📍 GPS</button>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Tọa độ X (Điểm cuối)</label>
+          <input type="text" id="bb-x2" placeholder=""/>
+        </div>
+        <div class="field">
+          <label>Y (Điểm cuối)</label>
+          <input type="text" id="bb-y2" placeholder=""/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-header">📝 Mô tả hành vi vi phạm</div>
+    <div class="section-body">
+      <div class="field">
+        <label>Hành vi 1</label>
+        <textarea id="bb-hv1" placeholder="Xây trụ cổng, láng mặt bê tông làm lối đi trên mái đê phía đồng. Xây 2 trụ cổng kích thước 0,4 x 0,4 x 2,5 m; Láng bê tông diện tích 3 x 2 = 6 m2; Chiều dài lồng lề: 3 m; Chiều rộng rãnh: 2 m"></textarea>
+      </div>
+      <div class="field">
+        <label>Hành vi 2 (nếu có)</label>
+        <textarea id="bb-hv2" placeholder=""></textarea>
+      </div>
+      <div class="field">
+        <label>Hành vi 3 (nếu có)</label>
+        <textarea id="bb-hv3" placeholder=""></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Yêu cầu khắc phục trước ngày</label>
+          <input type="date" id="bb-khacphuc"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-header">💬 Ý kiến & Ghi chú</div>
+    <div class="section-body">
+      <div class="field">
+        <label>Ý kiến người vi phạm</label>
+        <textarea id="bb-ykien-vp" placeholder=""></textarea>
+      </div>
+      <div class="field">
+        <label>Ý kiến người chứng kiến (nếu có)</label>
+        <textarea id="bb-ykien-ck" placeholder=""></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer-bottom"></div>
+</div>
+
+<!-- ========== TAB 2: SƠ HỌA MẶT BẰNG ========== -->
+<div id="tab-soho" class="tab-panel">
+  <div class="form-section">
+    <div class="section-header">✏️ Sơ họa mặt bằng hiện trạng vi phạm</div>
+    <div class="sketch-toolbar">
+      <label>Màu:</label>
+      <input type="color" id="sk-color" value="#000000"/>
+      <label>Nét:</label>
+      <input type="range" id="sk-size" min="1" max="20" value="3"/>
+      <select id="sk-tool">
+        <option value="pen">Bút vẽ</option>
+        <option value="line">Đường thẳng</option>
+        <option value="rect">Hình chữ nhật</option>
+        <option value="text">Chữ</option>
+        <option value="eraser">Tẩy</option>
+      </select>
+      <button class="btn-undo-sketch" onclick="undoSketch()">↩ Hoàn tác</button>
+      <button class="btn-clear-sketch" onclick="clearSketch()">🗑 Xóa</button>
+    </div>
+    <canvas id="sketchCanvas" width="800" height="600"></canvas>
+  </div>
+
+  <div class="form-section">
+    <div class="section-header">📐 Thông tin sơ họa</div>
+    <div class="section-body">
+      <div class="field-row">
+        <div class="field">
+          <label>TDP/Thôn</label>
+          <input type="text" id="sh-tdp" placeholder="TDP Thọ Lão 2"/>
+        </div>
+        <div class="field">
+          <label>Phường</label>
+          <input type="text" id="sh-phuong" placeholder="Kim Thanh"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Vị trí (mô tả)</label>
+          <input type="text" id="sh-vitri" placeholder="Nhà ở đây"/>
+        </div>
+        <div class="field">
+          <label>K cọc</label>
+          <input type="text" id="sh-kcoc" placeholder="K68+225"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Bờ</label>
+          <input type="text" id="sh-bo" placeholder="Hữu"/>
+        </div>
+        <div class="field">
+          <label>Sông</label>
+          <input type="text" id="sh-song" placeholder="Nhuệ"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spacer-bottom"></div>
+</div>
+
+<!-- ========== TAB 3: ẢNH HIỆN TRƯỜNG ========== -->
+<div id="tab-anh" class="tab-panel">
+  <div class="form-section">
+    <div class="section-header">📷 Ảnh chụp hiện trường</div>
+    <div class="section-body">
+      <p style="font-size:12.5px;color:var(--text2);margin-bottom:10px;">
+        Chụp ảnh hiện trường bằng Timemark hoặc camera thường. Ảnh sẽ đính kèm vào biên bản PDF.
+      </p>
+      <a href="https://apps.apple.com/app/id6446071834" target="_blank"
+         style="display:flex;align-items:center;gap:8px;background:#1a5276;color:#fff;
+         padding:10px 14px;border-radius:8px;text-decoration:none;margin-bottom:14px;font-weight:600;">
+        📷 Mở Timemark chụp ảnh có GPS
+      </a>
+      <div class="photo-grid" id="photo-grid">
+        <label class="btn-camera">
+          <div class="ic">📷</div>
+          <div>Chụp ảnh</div>
+          <input type="file" accept="image/*" capture="environment"
+                 class="camera-input" onchange="addPhoto(this)"/>
+        </label>
+        <label class="btn-camera">
+          <div class="ic">🖼</div>
+          <div>Chọn từ máy</div>
+          <input type="file" accept="image/*" multiple
+                 class="camera-input" onchange="addPhoto(this)"/>
+        </label>
+      </div>
+      <div id="photo-count" style="margin-top:8px;font-size:12px;color:var(--text2);">
+        Chưa có ảnh nào
+      </div>
+    </div>
+  </div>
+  <div class="spacer-bottom"></div>
+</div>
+
+<!-- ========== TAB 4: DANH SÁCH ========== -->
+<div id="tab-dsh" class="tab-panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="font-size:13px;font-weight:600;">Danh sách vi phạm đã lập</div>
+    <button onclick="switchTab('bb')" style="background:var(--accent);color:#fff;border:none;
+      border-radius:6px;padding:7px 12px;font-size:12px;cursor:pointer;">+ Thêm mới</button>
+  </div>
+  <div id="vp-list">
+    <div style="text-align:center;padding:40px;color:var(--text2);font-size:13px;">
+      Chưa có biên bản nào.<br>Bấm "+ Thêm mới" để lập biên bản.
+    </div>
+  </div>
+  <div class="spacer-bottom"></div>
+</div>
+
+<!-- ========== ACTION BAR ========== -->
+<div class="action-bar">
+  <button class="btn-secondary" onclick="saveDraft()">💾 Lưu nháp</button>
+  <button class="btn-primary" onclick="exportPDF()">📄 Xuất PDF</button>
+</div>
+
+<script>
+// ===== STATE =====
+let photos = [];
+let violations = JSON.parse(localStorage.getItem('violations') || '[]');
+let currentId = null;
+let sketchHistory = [];
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Set default date/time
+  const now = new Date();
+  document.getElementById('bb-ngay').value = now.toISOString().slice(0,10);
+  document.getElementById('bb-gio').value = now.toTimeString().slice(0,5);
+
+  // Check for URL params from map app
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('lat')) document.getElementById('bb-x1').value = params.get('lat');
+  if(params.get('lng')) document.getElementById('bb-y1').value = params.get('lng');
+  if(params.get('ct'))  document.getElementById('bb-ct').value = params.get('ct');
+  if(params.get('km'))  document.getElementById('bb-tu-km').value = params.get('km');
+
+  initSketch();
+  renderViolationList();
+});
+
+// ===== TABS =====
+function switchTab(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== GPS =====
+function getGPS(){
+  if(!navigator.geolocation){ alert('Thiết bị không hỗ trợ GPS'); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    document.getElementById('bb-x1').value = pos.coords.latitude.toFixed(6);
+    document.getElementById('bb-y1').value = pos.coords.longitude.toFixed(6);
+  }, err=>alert('Không lấy được GPS: '+err.message), {enableHighAccuracy:true,timeout:10000});
+}
+
+// ===== PHOTOS =====
+function addPhoto(input){
+  const files = Array.from(input.files);
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      photos.push({ id: Date.now()+'_'+Math.random().toString(36).slice(2), src: e.target.result, name: file.name });
+      renderPhotos();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+function removePhoto(id){
+  photos = photos.filter(p=>p.id!==id);
+  renderPhotos();
+}
+function renderPhotos(){
+  const grid = document.getElementById('photo-grid');
+  const existing = Array.from(grid.querySelectorAll('.photo-thumb'));
+  existing.forEach(e=>e.remove());
+  photos.forEach(p=>{
+    const div = document.createElement('div');
+    div.className='photo-thumb';
+    div.innerHTML=`<img src="${p.src}"/><button class="del-btn" onclick="removePhoto('${p.id}')">✕</button>`;
+    grid.prepend(div);
+  });
+  document.getElementById('photo-count').textContent = photos.length > 0 ? `Đã có ${photos.length} ảnh` : 'Chưa có ảnh nào';
+}
+
+// ===== SKETCH CANVAS =====
+let skCanvas, skCtx, isDrawing=false, startX=0, startY=0, skSnapshot;
+function initSketch(){
+  skCanvas = document.getElementById('sketchCanvas');
+  skCtx = skCanvas.getContext('2d');
+  // Set canvas actual size to match display
+  const rect = skCanvas.getBoundingClientRect();
+  skCanvas.width = Math.max(rect.width * window.devicePixelRatio, 400);
+  skCanvas.height = Math.max(rect.width * window.devicePixelRatio * 0.75, 300);
+  skCtx.fillStyle='#fff'; skCtx.fillRect(0,0,skCanvas.width,skCanvas.height);
+
+  skCanvas.addEventListener('pointerdown', skStart);
+  skCanvas.addEventListener('pointermove', skMove);
+  skCanvas.addEventListener('pointerup', skEnd);
+  skCanvas.addEventListener('pointerleave', skEnd);
+}
+function getPos(e){
+  const rect=skCanvas.getBoundingClientRect();
+  const scaleX=skCanvas.width/rect.width, scaleY=skCanvas.height/rect.height;
+  return { x:(e.clientX-rect.left)*scaleX, y:(e.clientY-rect.top)*scaleY };
+}
+function skStart(e){
+  e.preventDefault();
+  isDrawing=true;
+  const {x,y}=getPos(e);
+  startX=x; startY=y;
+  skSnapshot=skCtx.getImageData(0,0,skCanvas.width,skCanvas.height);
+  skHistory.push(skSnapshot);
+  const tool=document.getElementById('sk-tool').value;
+  if(tool==='pen'||tool==='eraser'){
+    skCtx.beginPath(); skCtx.moveTo(x,y);
+  }
+  if(tool==='text'){
+    const txt=prompt('Nhập chữ cần thêm:');
+    if(txt){ skCtx.fillStyle=document.getElementById('sk-color').value;
+      skCtx.font=`${parseInt(document.getElementById('sk-size').value)+10}px sans-serif`;
+      skCtx.fillText(txt,x,y); }
+    isDrawing=false;
+  }
+}
+function skMove(e){
+  if(!isDrawing) return; e.preventDefault();
+  const {x,y}=getPos(e);
+  const tool=document.getElementById('sk-tool').value;
+  const color=document.getElementById('sk-color').value;
+  const size=parseInt(document.getElementById('sk-size').value);
+  skCtx.strokeStyle=tool==='eraser'?'#fff':color;
+  skCtx.lineWidth=tool==='eraser'?size*3:size;
+  skCtx.lineCap='round'; skCtx.lineJoin='round';
+  if(tool==='pen'||tool==='eraser'){
+    skCtx.lineTo(x,y); skCtx.stroke();
+  } else if(tool==='line'||tool==='rect'){
+    if(skSnapshot) skCtx.putImageData(skSnapshot,0,0);
+    skCtx.beginPath();
+    if(tool==='line'){ skCtx.moveTo(startX,startY); skCtx.lineTo(x,y); }
+    else { skCtx.strokeRect(startX,startY,x-startX,y-startY); }
+    skCtx.stroke();
+  }
+}
+function skEnd(){ isDrawing=false; }
+function clearSketch(){
+  if(confirm('Xóa toàn bộ sơ họa?')){ skCtx.fillStyle='#fff'; skCtx.fillRect(0,0,skCanvas.width,skCanvas.height); }
+}
+function undoSketch(){
+  if(skHistory.length>0){ skCtx.putImageData(skHistory.pop(),0,0); }
+}
+
+// ===== COLLECT DATA =====
+function collectData(){
+  return {
+    id: currentId || Date.now().toString(),
+    ngay: document.getElementById('bb-ngay').value,
+    gio: document.getElementById('bb-gio').value,
+    so: document.getElementById('bb-so').value,
+    diadiem: document.getElementById('bb-diadiem').value,
+    nguoi1: document.getElementById('bb-nguoi1').value,
+    chucvu1: document.getElementById('bb-chucvu1').value,
+    nguoi2: document.getElementById('bb-nguoi2').value,
+    chucvu2: document.getElementById('bb-chucvu2').value,
+    donvi: document.getElementById('bb-donvi').value,
+    vp_ten: document.getElementById('bb-vp-ten').value,
+    vp_gioitinh: document.getElementById('bb-vp-gioitinh').value,
+    vp_quoctich: document.getElementById('bb-vp-quoctich').value,
+    vp_nghenghiep: document.getElementById('bb-vp-nghenghiep').value,
+    vp_noio: document.getElementById('bb-vp-noio').value,
+    ct: document.getElementById('bb-ct').value,
+    phuong: document.getElementById('bb-phuong').value,
+    tinh: document.getElementById('bb-tinh').value,
+    phia: document.getElementById('bb-phia').value,
+    bo: document.getElementById('bb-bo').value,
+    song: document.getElementById('bb-song').value,
+    tu_km: document.getElementById('bb-tu-km').value,
+    den_km: document.getElementById('bb-den-km').value,
+    x1: document.getElementById('bb-x1').value,
+    y1: document.getElementById('bb-y1').value,
+    x2: document.getElementById('bb-x2').value,
+    y2: document.getElementById('bb-y2').value,
+    hv1: document.getElementById('bb-hv1').value,
+    hv2: document.getElementById('bb-hv2').value,
+    hv3: document.getElementById('bb-hv3').value,
+    khacphuc: document.getElementById('bb-khacphuc').value,
+    ykien_vp: document.getElementById('bb-ykien-vp').value,
+    ykien_ck: document.getElementById('bb-ykien-ck').value,
+    photos: photos.map(p=>({id:p.id,name:p.name,src:p.src})),
+    sketch: skCanvas ? skCanvas.toDataURL('image/png') : null,
+    createdAt: new Date().toISOString()
+  };
+}
+
+// ===== SAVE DRAFT =====
+function saveDraft(){
+  const data = collectData();
+  const idx = violations.findIndex(v=>v.id===data.id);
+  if(idx>=0) violations[idx]=data; else violations.push(data);
+  localStorage.setItem('violations', JSON.stringify(violations));
+  currentId = data.id;
+  renderViolationList();
+  alert('Đã lưu nháp!');
+}
+
+// ===== VIOLATION LIST =====
+function renderViolationList(){
+  const list = document.getElementById('vp-list');
+  if(!violations.length){
+    list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text2);font-size:13px;">Chưa có biên bản nào.<br>Bấm "+ Thêm mới" để lập biên bản.</div>';
+    return;
+  }
+  list.innerHTML = violations.map(v=>`
+    <div class="vp-card">
+      <div class="vp-card-header">
+        ⚠️ BB lần ${v.so||1} — ${v.vp_ten||'(chưa điền tên)'}
+        <span class="status-badge open" style="margin-left:auto;">Mới</span>
+      </div>
+      <div class="vp-card-body">
+        <div class="info-row"><span class="label">Ngày lập:</span><span class="val">${formatDate(v.ngay)} ${v.gio||''}</span></div>
+        <div class="info-row"><span class="label">Công trình:</span><span class="val">${v.ct||'—'}</span></div>
+        <div class="info-row"><span class="label">Vị trí:</span><span class="val">${v.tu_km||'—'} ${v.bo?'bờ '+v.bo:''} sông ${v.song||'—'}</span></div>
+        <div class="info-row"><span class="label">Ảnh:</span><span class="val">${v.photos?.length||0} ảnh đính kèm</span></div>
+      </div>
+      <div class="vp-card-actions">
+        <button class="vp-btn edit" onclick="loadViolation('${v.id}')">✏️ Sửa</button>
+        <button class="vp-btn pdf" onclick="exportPDFById('${v.id}')">📄 Xuất PDF</button>
+        <button class="vp-btn del" onclick="deleteViolation('${v.id}')">🗑 Xóa</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function formatDate(d){ if(!d) return ''; const p=d.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; }
+
+function loadViolation(id){
+  const v = violations.find(x=>x.id===id);
+  if(!v) return;
+  currentId = id;
+  Object.keys(v).forEach(k=>{
+    const el=document.getElementById('bb-'+k.replace(/_/g,'-'));
+    if(el && typeof v[k]==='string') el.value=v[k];
+  });
+  photos = v.photos || [];
+  renderPhotos();
+  switchTab('bb');
+  document.querySelector('.tab-btn').click();
+}
+
+function deleteViolation(id){
+  if(!confirm('Xóa biên bản này?')) return;
+  violations = violations.filter(v=>v.id!==id);
+  localStorage.setItem('violations', JSON.stringify(violations));
+  renderViolationList();
+}
+
+// ===== EXPORT PDF =====
+function exportPDFById(id){
+  const v = violations.find(x=>x.id===id);
+  if(v) generatePDF(v);
+}
+function exportPDF(){
+  const data = collectData();
+  generatePDF(data);
+}
+
+function generatePDF(d){
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const W=210, m=15; let y=20;
+
+  function addFont(){ /* jsPDF built-in supports UTF-8 via standard */ }
+  function ln(n=5){ y+=n; if(y>280){ doc.addPage(); y=20; } }
+  function txt(text, x, size=10, style='normal', align='left'){
+    doc.setFontSize(size); doc.setFont('helvetica',style);
+    if(align==='center') doc.text(text,x,y,'center');
+    else if(align==='right') doc.text(text,x,y,'right');
+    else doc.text(text,x,y);
+  }
+  function line(x1,y1,x2,y2){ doc.line(x1,y1,x2,y2); }
+  function dots(label, val, x, maxW){
+    txt(label,x,10,'normal'); const lw=doc.getTextWidth(label);
+    val=val||'';
+    const dots='.'.repeat(Math.max(0,Math.floor((maxW-lw-doc.getTextWidth(val))/1.5)));
+    txt(dots, x+lw, 10); txt(val, x+lw+doc.getTextWidth(dots), 10);
+  }
+
+  // ---- PAGE 1: BIÊN BẢN LÀM VIỆC ----
+  txt('CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM', W/2, 12, 'bold', 'center'); ln(6);
+  txt('Độc lập - Tự do - Hạnh phúc', W/2, 11, 'normal', 'center'); ln(5);
+  line(55,y,155,y); ln(6);
+  txt(`Ninh Bình, ngày ${d.ngay ? new Date(d.ngay).getDate() : '...'} tháng ${d.ngay ? new Date(d.ngay).getMonth()+1 : '...'} năm ${d.ngay ? new Date(d.ngay).getFullYear() : '....'}`, W/2, 10, 'italic', 'center'); ln(8);
+  txt('BIÊN BẢN LÀM VIỆC', W/2, 14, 'bold', 'center'); ln(6);
+  txt(`(lần ${d.so||'1'}....)`, W/2, 11, 'normal', 'center'); ln(8);
+
+  txt(`Hôm nay, vào hồi ${d.gio||'...'} giờ .....phút, ngày ${formatDate(d.ngay)||'........'}, tại ${d.diadiem||'......................'}`, m, 10); ln(5);
+  txt(`Phường/xã ${d.phuong||'......................'}, Tỉnh Ninh Bình.`, m, 10); ln(6);
+
+  txt('Chúng tôi gồm:', m, 10, 'bold'); ln(5);
+  txt('1. Người có thẩm quyền lập biên bản:', m, 10, 'bold'); ln(5);
+  dots(`- Họ và tên ${d.nguoi1||'...........................'} Chức vụ ${d.chucvu1||'...........................'}`, '', m, W-m-m); ln(5);
+  dots(`- Họ và tên ${d.nguoi2||'...........................'} Chức vụ ${d.chucvu2||'...........................'}`, '', m, W-m-m); ln(5);
+  txt(`Đơn vị công tác: ${d.donvi||'Xí nghiệp Thủy lợi Nhật Tựu'}`, m, 10); ln(6);
+
+  txt('3. Chủ thể vi phạm:', m, 10, 'bold'); ln(5);
+  txt('a) Người vi phạm:', m, 10); ln(4);
+  dots(`- Họ và tên ${d.vp_ten||'............................'} Giới tính: ${d.vp_gioitinh||'......'}`, '', m, W-m-m); ln(5);
+  dots(`- Quốc tịch: ${d.vp_quoctich||'Việt Nam'} Nghề nghiệp: ${d.vp_nghenghiep||'.......................'}`, '', m, W-m-m); ln(5);
+  dots(`- Nơi ở hiện tại: ${d.vp_noio||'........................................................................'}`, '', m, W-m-m); ln(6);
+
+  txt('Tiến hành lập biên bản làm việc đối với chủ thể vi phạm nêu trên:', m, 10, 'bold'); ln(5);
+  txt('1. Thời gian:', m, 10); ln(4);
+  txt(`- Phát sinh vi phạm: ${formatDate(d.ngay)||'......'} / ${new Date().getFullYear()}`, m+4, 10); ln(4);
+  txt(`- Phát hiện hành vi vi phạm: ${formatDate(d.ngay)||'......'} / ${new Date().getFullYear()}`, m+4, 10); ln(5);
+
+  txt('2. Địa điểm, vị trí phát sinh hành vi vi phạm:', m, 10); ln(4);
+  txt(`- Tên công trình: ${d.ct||'.......................'}, Thuộc địa bàn ${d.diadiem||'....................'}, Tỉnh Ninh Bình.`, m+4, 10); ln(4);
+  txt(`- Phạm vi: Phía ${d.phia||'.....'}, Bờ ${d.bo||'.......'} Sông ${d.song||'..........'}`, m+4, 10); ln(4);
+  txt(`- Từ Km ${d.tu_km||'.........'}, đến Km ${d.den_km||'..........'}`, m+4, 10); ln(4);
+  txt(`- Tọa độ Gmaps điểm đầu: X = ${d.x1||'......................'}, Y = ${d.y1||'......................'}`, m+4, 10); ln(4);
+  if(d.x2) txt(`- Tọa độ Gmaps điểm cuối: X = ${d.x2}, Y = ${d.y2||''}`, m+4, 10); ln(5);
+
+  txt('3. Mô tả các hành vi vi phạm:', m, 10); ln(4);
+  if(d.hv1){
+    txt('a) Hành vi 1:', m+4, 10); ln(4);
+    const lines1 = doc.splitTextToSize(d.hv1, W-m-m-8);
+    lines1.forEach(l=>{ txt(l, m+8, 10); ln(5); });
+  }
+  if(d.hv2){ txt('b) Hành vi 2:', m+4, 10); ln(4); const l2=doc.splitTextToSize(d.hv2,W-m-m-8); l2.forEach(l=>{txt(l,m+8,10);ln(5);}); }
+  if(d.hv3){ txt('c) Hành vi 3:', m+4, 10); ln(4); const l3=doc.splitTextToSize(d.hv3,W-m-m-8); l3.forEach(l=>{txt(l,m+8,10);ln(5);}); }
+
+  ln(4);
+  if(d.khacphuc) txt(`- Yêu cầu khắc phục trước ngày ${formatDate(d.khacphuc)||'...'}`, m, 10); ln(5);
+
+  // Signatures
+  if(y > 230){ doc.addPage(); y=20; }
+  y = Math.max(y, 220);
+  txt('NGƯỜI CHỨNG KIẾN', m+10, 11, 'bold', 'center'); txt('NGƯỜI LẬP BIÊN BẢN', W/2+20, 11, 'bold', 'center'); ln(5);
+  txt('(Ký, ghi rõ họ tên)', m+10, 9, 'italic', 'center'); txt('(Ký, ghi rõ họ tên, chức vụ)', W/2+20, 9, 'italic', 'center'); ln(20);
+  txt(d.nguoi1||'', m+10, 10, 'normal', 'center'); txt(d.nguoi1||'', W/2+20, 10, 'normal', 'center'); ln(6);
+  y+=5;
+  txt('NGƯỜI VI PHẠM / ĐẠI DIỆN TỔ CHỨC VI PHẠM', W/2, 11, 'bold', 'center'); ln(5);
+  txt('(Ký, ghi rõ họ tên)', W/2, 9, 'italic', 'center'); ln(20);
+  txt(d.vp_ten||'', W/2, 10, 'normal', 'center');
+
+  // ---- PAGE 2: SƠ HỌA MẶT BẰNG ----
+  doc.addPage(); y=20;
+  txt('SƠ HỌA MẶT BẰNG HIỆN TRẠNG VI PHẠM', W/2, 13, 'bold', 'center'); ln(5);
+  txt(`(Kèm theo Biên bản làm việc ngày ${formatDate(d.ngay)||'...'} tháng ${d.ngay?new Date(d.ngay).getMonth()+1:'...'} năm ${d.ngay?new Date(d.ngay).getFullYear():'.....'})`, W/2, 10, 'italic', 'center'); ln(7);
+  dots(`- Họ và tên chủ hộ Ông (bà): ${d.vp_ten||'.................................................'}`, '', m, W-m-m); ln(5);
+  dots(`- Địa điểm vi phạm: TDP ${document.getElementById('sh-tdp')?.value||'........'} Phường ${document.getElementById('sh-phuong')?.value||'...........'} Tỉnh Ninh Bình`, '', m, W-m-m); ln(5);
+  dots(`- Vị trí: ${document.getElementById('sh-vitri')?.value||'......................'} K.${document.getElementById('sh-kcoc')?.value||'...........'} Bờ ${d.bo||'........'} Sông ${d.song||'............'}`, '', m, W-m-m); ln(8);
+
+  // Insert sketch
+  if(d.sketch || (skCanvas && skCanvas.toDataURL())){
+    const skImg = d.sketch || skCanvas.toDataURL('image/png');
+    try{ doc.addImage(skImg,'PNG', m, y, W-m*2, 80); y+=84; } catch(e){ y+=5; }
+  } else { doc.rect(m,y,W-m*2,80); y+=84; }
+  ln(4);
+  txt(`- Tọa độ (1): X=${d.x1||'................'}, Y=${d.y1||'................'}`, m, 10); ln(5);
+  txt(`- Tọa độ (2): X=${d.x2||'................'}, Y=${d.y2||'................'}`, m, 10); ln(10);
+  txt(`Ngày ${d.ngay?new Date(d.ngay).getDate():'...'} tháng ${d.ngay?new Date(d.ngay).getMonth()+1:'...'} năm ${d.ngay?new Date(d.ngay).getFullYear():'....'}`, W-m-40, 10, 'italic'); ln(5);
+  txt('Người vẽ sơ họa', W-m-40, 10, 'bold'); ln(15);
+  txt(d.nguoi1||'', W-m-40, 10);
+
+  // ---- PHOTOS ----
+  const pList = d.photos || [];
+  if(pList.length>0){
+    doc.addPage(); y=20;
+    txt('ẢNH CHỤP HIỆN TRƯỜNG', W/2, 13, 'bold', 'center'); ln(8);
+    let col=0;
+    for(let i=0;i<pList.length;i++){
+      const px = m + col*(90+8), py=y;
+      try{ doc.addImage(pList[i].src,'JPEG',px,py,90,70); } catch(e){}
+      col++;
+      if(col>=2){ col=0; ln(75); }
+    }
+  }
+
+  // ---- PHIẾU GIAO NHẬN ----
+  doc.addPage(); y=20;
+  txt('CÔNG TY TNHH MỘT THÀNH VIÊN', m+30, 9, 'bold', 'center');
+  txt('CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM', W/2+30, 9, 'bold', 'center'); ln(4);
+  txt('ĐẦU TƯ PHÁT TRIỂN THUỶ LỢI SÔNG NHUỆ', m+30, 9, 'bold', 'center');
+  txt('Độc lập - Tự do - Hạnh phúc', W/2+30, 9, 'normal', 'center'); ln(4);
+  txt('XÍ NGHIỆP THUỶ LỢI NHẬT TỰU', m+30, 9, 'bold', 'center'); ln(6);
+  txt('PHIẾU GIAO NHẬN', W/2, 13, 'bold', 'center'); ln(5);
+  txt('Hồ sơ vụ việc vi phạm trong phạm vi bảo vệ công trình thủy lợi', W/2, 10, 'italic', 'center'); ln(7);
+  const para=`Xí nghiệp Thuỷ lợi Nhật Tựu bàn giao hồ sơ vụ việc vi phạm trong phạm vi bảo vệ công trình thủy lợi, lập ngày ${d.ngay?new Date(d.ngay).getDate():'...'} tháng ${d.ngay?new Date(d.ngay).getMonth()+1:'...'} năm ${d.ngay?new Date(d.ngay).getFullYear():'....'} đối với chủ thể vi phạm ${d.vp_ten||'.....................'} xây tại công trình thủy lợi ${d.ct||'................................'} trên địa bàn cho UBND xã/phường ${d.phuong||'...................................'}`;
+  const paraLines=doc.splitTextToSize(para,W-m*2);
+  paraLines.forEach(l=>{txt(l,m,10);ln(5);}); ln(3);
+  txt('1. Người giao:', m, 10, 'bold'); ln(5);
+  txt(`- Họ và tên ${d.nguoi1||'...........................'} Chức vụ ${d.chucvu1||'...........................'}`, m+4, 10); ln(5);
+  txt('2. Người nhận:', m, 10, 'bold'); ln(5);
+  txt('- Họ và tên ..................................... Chức vụ ......................................', m+4, 10); ln(6);
+  txt('Hai bên bàn giao, tiếp nhận hồ sơ vụ việc vi phạm bao gồm:', m, 10); ln(5);
+
+  // Table
+  const tableY=y; doc.rect(m,tableY,W-m*2,8); txt('TT',m+5,10,'bold'); txt('Danh mục',m+30,10,'bold'); txt('Số lượng',W-m-25,10,'bold'); ln(8);
+  const items=[['1','Biên bản làm việc','01'],['2','Bản vẽ sơ họa hiện trạng vi phạm','01'],['3','Ảnh chụp hiện trạng vi phạm',String(pList.length||'01')],['4','Giấy tờ xác thực chủ thể vi phạm','......'],['5','Giấy tờ khác','......']];
+  items.forEach(([tt,dm,sl])=>{ doc.rect(m,y,W-m*2,7); txt(tt,m+5,10); txt(dm,m+30,10); txt(sl,W-m-25,10); ln(7); }); ln(5);
+  txt('NGƯỜI NHẬN HỒ SƠ', m+25, 11, 'bold', 'center'); txt('NGƯỜI GIAO HỒ SƠ', W-m-25, 11, 'bold', 'center'); ln(5);
+  txt('(Ký, họ tên)', m+25, 9, 'italic', 'center'); txt('(Ký, họ tên)', W-m-25, 9, 'italic', 'center'); ln(20);
+  txt('(Người nhận)', m+25, 9, 'italic', 'center'); txt(d.nguoi1||'', W-m-25, 10, 'normal', 'center');
+
+  // ---- SAVE ----
+  const fname=`BB_VPham_${(d.vp_ten||'').replace(/\s+/g,'_')}_${d.ngay||'nodate'}.pdf`;
+  doc.save(fname);
+}
+
+// ===== RENDER LIST ON LOAD =====
+renderViolationList();
+</script>
+</body>
+</html>
